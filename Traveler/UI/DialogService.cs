@@ -117,24 +117,27 @@ namespace Traveler.UI {
 			                               });
 		}
 
-		void DialogAlertCallback(MessageBus bus, DialogAlertInfo alertInfo) {
-			if (alertInfo == null) throw new ArgumentNullException(nameof(alertInfo));
-			if (_app?.MainPage == null)
-				throw new FieldAccessException(@"App property not set or App Main Page is not set. Use Init() before using dialogs");
+        void DialogAlertCallback(MessageBus bus, DialogAlertInfo alertInfo)
+        {
+            if (alertInfo == null) throw new ArgumentNullException(nameof(alertInfo));
+            if (_app?.MainPage == null)
+                throw new FieldAccessException(@"App property not set or App Main Page is not set. Use Init() before using dialogs");
 
-			Device.BeginInvokeOnMainThread(async () => {
-				                               await _app.MainPage.DisplayAlert(alertInfo.Title, alertInfo.Message, alertInfo.Cancel);
-				                               alertInfo.OnCompleted?.Invoke();
-			                               });
-		}
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await _app.MainPage.DisplayAlert(alertInfo.Title, alertInfo.Message, alertInfo.Cancel);
+                alertInfo.OnCompleted?.Invoke();
+            });
+        }
 	}
 
-	public class DialogAlertInfo {
-		public string Title { get; set; }
-		public string Message { get; set; }
-		public string Cancel { get; set; }
-		public Action OnCompleted { get; set; }
-	}
+    public class DialogAlertInfo
+    {
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public string Cancel { get; set; }
+        public Action OnCompleted { get; set; }
+    }
 
 	public class DialogEntryInfo {
 		public string Title { get; set; }

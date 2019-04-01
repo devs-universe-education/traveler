@@ -111,15 +111,16 @@ namespace Traveler.DAL.Helpers
 		    return result;
 	    }
 
-	    public static string GetFileContent(string fileName) {
-		    string content;
-		    var assembly = typeof(DataTools).GetTypeInfo().Assembly;
-		    var stream = assembly.GetManifestResourceStream(fileName);
-		    if (stream == null) return null;
-		    using (var reader = new StreamReader(stream)) content = reader.ReadToEnd();
+        public static string GetFileContent(string fileName)
+        {
+            string content;
+            var assembly = typeof(DataTools).GetTypeInfo().Assembly;
+            var stream = assembly.GetManifestResourceStream(fileName);
+            if (stream == null) return null;
+            using (var reader = new StreamReader(stream)) content = reader.ReadToEnd();
 
-		    return content;
-	    }
+            return content;
+        }
 
 	    public static List<string> GetFileLinesContent(string fileName) {
 		    var assembly = typeof(DataTools).GetTypeInfo().Assembly;
