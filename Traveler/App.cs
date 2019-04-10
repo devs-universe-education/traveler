@@ -15,9 +15,9 @@ namespace Traveler
 			DataServices.Init(true);
 		}
 
-		protected override void OnStart ()
+		protected override void OnStart()
 		{
-			NavigationService.Instance.SetMainPage(AppPages.Main);
+            NavigationService.Instance.SetMainTabbedPage(AppPages.MainTab);
 		}
 	}
 }

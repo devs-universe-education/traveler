@@ -65,6 +65,37 @@ namespace Traveler.UI
             _app = app;
         }
 
+        // ДОДЕЛАТЬ
+        public void SetMainTabbedPage(object tabbedName = null, object childrenNames = null, Dictionary<string, object> navParams = null, bool invokeOnMainThread = false)
+        {
+            if (_isBusy) return;
+
+            //if(string.IsNullOrEmpty(tabbedName?.ToString())) throw new ArgumentNullException(nameof(tabbedName));
+            //if(string.IsNullOrEmpty(childrenNames?.ToString())) throw new ArgumentNullException(nameof(childrenNames));
+
+            Action setMainPage = () =>
+            {
+                _isBusy = true;
+
+                var tabbedPage = new TabbedPage();
+                // подтянуть из tabbedName и childrenNames
+                // + навигация
+                tabbedPage.Children.Add(new Pages.Main.DisplayPage());
+                tabbedPage.Children.Add(new Pages.Planning.CalendarPage());
+                tabbedPage.Children.Add(new Pages.Settings.SettingsPage());
+
+                _app.MainPage = tabbedPage;
+                //_navigations?.Clear();
+                //_navigations?.Push(masterDetailPage.Detail.Navigation);
+                _isBusy = false;
+            };
+
+            if (invokeOnMainThread)
+                Device.BeginInvokeOnMainThread(setMainPage);
+            else
+                setMainPage.Invoke();
+        }
+
         public void SetMainMasterDetailPage(object masterName,
             object detailName,
             Dictionary<string, object> navParams = null,
