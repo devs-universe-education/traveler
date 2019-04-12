@@ -6,9 +6,10 @@
              Title="CalendarPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Это календарь"
-                VerticalOptions="CenterAndExpand" 
+            <Label Text="Это календарь" 
                 HorizontalOptions="CenterAndExpand" />
+            <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}"/>
+            <Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

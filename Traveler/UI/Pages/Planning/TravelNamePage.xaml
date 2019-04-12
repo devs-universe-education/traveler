@@ -5,7 +5,7 @@
              x:Class="Traveler.UI.Pages.Planning.TravelNamePage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label Text="Задание имени путешествия"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>

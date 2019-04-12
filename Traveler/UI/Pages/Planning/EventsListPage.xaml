@@ -5,9 +5,10 @@
              x:Class="Traveler.UI.Pages.Planning.EventsListPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
+            <Label Text="Список событий выбранного дня"
                 HorizontalOptions="CenterAndExpand" />
+            <Button Text="Выбрать событие (если есть)" Command="{Binding GoToEventDescriptionCommand}"/>
+            <Button Text="+ Добавить событие" Command="{Binding GoToEventNameCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>
