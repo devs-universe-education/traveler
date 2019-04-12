@@ -7,7 +7,7 @@ namespace Traveler.BL.ViewModels.Planning
 {
     class CalendarViewModel : BaseViewModel
     {
-        public ICommand GoToTravelNameCommand => GetNavigateToCommand(AppPages.TravelName);
-        public ICommand GoToEventsListCommand => GetNavigateToCommand(AppPages.EventsList);
+        public ICommand GoToTravelNameCommand => MakeNavigateToCommand(AppPages.TravelName);
+        public ICommand GoToEventsListCommand => MakeNavigateToCommand(AppPages.EventsList);
     }
 }

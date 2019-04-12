@@ -102,19 +102,7 @@ namespace Traveler.BL.ViewModels
             return Task.FromResult(0);
         }
 
-        protected void NavigateTo(object toName,
-            NavigationMode mode = NavigationMode.Normal,
-            string toTitle = null,
-            Dictionary<string, object> navParams = null,
-            bool newNavigationStack = false,
-            bool withAnimation = true,
-            bool withBackButton = false,
-            object fromName = null)
-        {
-            NavigateTo(toName, fromName ?? _classShortName, mode, toTitle, navParams, newNavigationStack, withAnimation, withBackButton);
-        }
-
-        protected static void NavigateTo(object toName,
+        protected static Task<bool> NavigateTo(object toName,
             object fromName,
             NavigationMode mode = NavigationMode.Normal,
             string toTitle = null,
@@ -124,10 +112,9 @@ namespace Traveler.BL.ViewModels
             bool withBackButton = false)
         {
 
-            if (toName == null) return;
-
             MessageBus.SendMessage(Consts.DialogHideLoadingMessage);
 
+            var completedTask = new TaskCompletionSource<bool>();
             MessageBus.SendMessage(Consts.NavigationPushMessage,
                 new NavigationPushInfo
                 {
@@ -135,14 +122,13 @@ namespace Traveler.BL.ViewModels
                     From = fromName?.ToString(),
                     Mode = mode,
                     NavigationParams = dataToLoad,
-                    ToTitle = toTitle,
                     NewNavigationStack = newNavigationStack,
-                    WithAnimation = withAnimation,
-                    WithBackButton = withBackButton
+                    OnCompletedTask = completedTask,
                 });
+            return completedTask.Task;
         }
 
-        protected static ICommand GetNavigateToCommand(object toName,
+        protected static ICommand MakeNavigateToCommand(object toName,
             NavigationMode mode = NavigationMode.Normal,
             string toTitle = null,
             bool newNavigationStack = false,
@@ -163,16 +149,16 @@ namespace Traveler.BL.ViewModels
             return GetCommand(propertyName) ?? SaveCommand(new Command(commandAction), propertyName);
         }
 
-        protected void NavigateBack(NavigationMode mode = NavigationMode.Normal, bool withAnimation = true, bool force = false)
+        protected Task<bool> NavigateBack(NavigationMode mode = NavigationMode.Normal, bool withAnimation = true, bool force = false)
         {
             ClearDialogs();
-
+            var taskCompletionSource = new TaskCompletionSource<bool>();
             MessageBus.SendMessage(Consts.NavigationPopMessage, new NavigationPopInfo
             {
                 Mode = mode,
-                WithAnimation = withAnimation,
-                Force = force
+                OnCompletedTask = taskCompletionSource
             });
+            return taskCompletionSource.Task;
         }
 
         public void ClearDialogs()

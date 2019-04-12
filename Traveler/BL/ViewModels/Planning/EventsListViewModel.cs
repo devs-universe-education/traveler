@@ -7,7 +7,7 @@ namespace Traveler.BL.ViewModels.Planning
 {
     class EventsListViewModel : BaseViewModel
     {
-        public ICommand GoToEventDescriptionCommand => GetNavigateToCommand(AppPages.EventDescription);
-        public ICommand GoToEventNameCommand => GetNavigateToCommand(AppPages.EventName);
+        public ICommand GoToEventDescriptionCommand => MakeNavigateToCommand(AppPages.EventDescription);
+        public ICommand GoToEventNameCommand => MakeNavigateToCommand(AppPages.EventName);
     }
 }
