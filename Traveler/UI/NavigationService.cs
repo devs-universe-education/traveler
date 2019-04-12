@@ -69,9 +69,9 @@ namespace Traveler.UI
         {
             var tabbedPage = new TabbedPage();
             tabbedPage.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Display.ToString())));
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Calendar.ToString())));
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Settings.ToString())));
+            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Display.ToString())) { Title = "Home"  });
+            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Calendar.ToString())) {Title = "Calendar" });
+            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Settings.ToString())) { Title = "Settings" });
 
             Application.Current.MainPage = tabbedPage;
         }
