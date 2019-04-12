@@ -3,7 +3,14 @@ namespace Traveler
     public enum AppPages
     {
         Main,
-        MainTab
+        MainTabbed,
+        Display,
+        Calendar,
+        EventDescription,
+        EventName,
+        EventsList,
+        TravelName,
+        Settings
     }
 
     public enum NavigationMode

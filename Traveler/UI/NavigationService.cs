@@ -66,27 +66,26 @@ namespace Traveler.UI
         }
 
         // ДОДЕЛАТЬ
-        public void SetMainTabbedPage(object tabbedName = null, object childrenNames = null, Dictionary<string, object> navParams = null, bool invokeOnMainThread = false)
+        public void SetMainTabbedPage(object tabbedName, Dictionary<string, object> navParams = null, bool invokeOnMainThread = false, params object[] childrensNames)
         {
             if (_isBusy) return;
 
-            //if(string.IsNullOrEmpty(tabbedName?.ToString())) throw new ArgumentNullException(nameof(tabbedName));
-            //if(string.IsNullOrEmpty(childrenNames?.ToString())) throw new ArgumentNullException(nameof(childrenNames));
+            if (string.IsNullOrEmpty(tabbedName?.ToString())) throw new ArgumentNullException(nameof(tabbedName));
 
             Action setMainPage = () =>
             {
                 _isBusy = true;
 
                 var tabbedPage = new TabbedPage();
-                // подтянуть из tabbedName и childrenNames
-                // + навигация
-                tabbedPage.Children.Add(new Pages.Main.DisplayPage());
-                tabbedPage.Children.Add(new Pages.Planning.CalendarPage());
-                tabbedPage.Children.Add(new Pages.Settings.SettingsPage());
+                //foreach(var children in childrensNames)
+                //{
+                //    tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(children.ToString(), NavigationMode.Normal, navParams, true, false, false)));
+                //}
+                tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Display.ToString(), NavigationMode.Normal, navParams, false, false, false)));
+                tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Calendar.ToString(), NavigationMode.Normal, navParams, true, false, false)));
+                tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Settings.ToString(), NavigationMode.Normal, navParams, false, false, false)));
 
                 _app.MainPage = tabbedPage;
-                //_navigations?.Clear();
-                //_navigations?.Push(masterDetailPage.Detail.Navigation);
                 _isBusy = false;
             };
 

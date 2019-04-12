@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Traveler.BL.ViewModels.Planning
 {
-    class EventNameViewModel
+    class EventNameViewModel : BaseViewModel
     {
     }
 }

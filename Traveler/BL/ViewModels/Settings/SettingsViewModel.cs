@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Traveler.BL.ViewModels.Settings
 {
-    class SettingsViewModel
+    class SettingsViewModel : BaseViewModel
     {
     }
 }

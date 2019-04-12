@@ -17,8 +17,8 @@ namespace Traveler
 
 		protected override void OnStart()
 		{
-            NavigationService.Instance.SetMainTabbedPage(AppPages.MainTab);
-		}
+            NavigationService.Instance.SetMainTabbedPage(AppPages.MainTabbed, childrensNames: new object[] { AppPages.Display, AppPages.Calendar, AppPages.Settings });
+        }
 	}
 }
 

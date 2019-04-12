@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace Traveler.UI.Pages.Main
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DisplayPage : ContentPage
+	public partial class DisplayPage : BasePage
 	{
 		public DisplayPage ()
 		{
