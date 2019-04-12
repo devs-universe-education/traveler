@@ -3,7 +3,6 @@ namespace Traveler
     public enum AppPages
     {
         Main,
-        MainTabbed,
         Display,
         Calendar,
         EventDescription,

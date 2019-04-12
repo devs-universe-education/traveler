@@ -73,18 +73,16 @@ namespace Traveler.UI {
 			                               });
 		}
 
-		void DialogToastCallback(MessageBus bus, DialogToastInfo toastInfo) {
-			if (toastInfo == null) throw new ArgumentNullException(nameof(toastInfo));
-			Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.Toast(new ToastConfig(toastInfo.Text) {
-				                                                                                                Duration =
-					                                                                                                TimeSpan.FromSeconds(toastInfo
-						                                                                                                                     .IsLongTime
-						                                                                                                                     ? 2
-						                                                                                                                     : 1)
-			                                                                                                }));
-		}
+        void DialogToastCallback(MessageBus bus, DialogToastInfo toastInfo)
+        {
+            if (toastInfo == null) throw new ArgumentNullException(nameof(toastInfo));
+            Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.Toast(new ToastConfig(toastInfo.Text)
+            {
+                Duration = TimeSpan.FromSeconds(toastInfo.IsLongTime ? 2 : 1)
+            }));
+        }
 
-		void DialogHideLoadingCallback(MessageBus bus) {
+        void DialogHideLoadingCallback(MessageBus bus) {
 			Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.HideLoading());
 		}
 

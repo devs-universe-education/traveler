@@ -11,13 +11,13 @@ namespace Traveler
 		public App ()
 		{
 			DialogService.Init(this);
-			NavigationService.Init(this);
+			NavigationService.InitTabbed(AppPages.Display, AppPages.Calendar, AppPages.Settings);
 			DataServices.Init(true);
 		}
 
-		protected override void OnStart()
-		{
-            NavigationService.Instance.SetMainTabbedPage(AppPages.MainTabbed, childrensNames: new object[] { AppPages.Display, AppPages.Calendar, AppPages.Settings });
+        protected override void OnStart()
+        {
+
         }
 	}
 }
