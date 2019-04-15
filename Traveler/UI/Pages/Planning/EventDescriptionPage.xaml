@@ -5,9 +5,15 @@
              x:Class="Traveler.UI.Pages.Planning.EventDescriptionPage">
     <ContentPage.Content>
         <StackLayout>
+            
             <Label Text="Описание события"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            
+            <Label Text="{Binding EventObject.Title}"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

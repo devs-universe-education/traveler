@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Traveler.DAL.DataObjects
 {
-    class EventDataObject
+    public class EventDataObject
     {
         public string Title { get; set; }
         public EventType Type { get; set; }
@@ -15,7 +15,7 @@ namespace Traveler.DAL.DataObjects
         public string Comment { get; set; }
     }
 
-    enum EventType
+    public enum EventType
     {
         Excursion,
         Eating

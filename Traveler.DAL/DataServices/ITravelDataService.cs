@@ -7,7 +7,7 @@ using Traveler.DAL.DataObjects;
 
 namespace Traveler.DAL.DataServices
 {
-    interface ITravelDataService
+    public interface ITravelDataService
     {
         Task<RequestResult<DayDataObject>> GetDayDataObject(CancellationToken ctx);
         Task<RequestResult<EventDataObject>> GetEventDataObject(CancellationToken ctx);
