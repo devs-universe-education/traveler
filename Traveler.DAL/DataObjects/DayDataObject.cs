@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Traveler.DAL.DataObjects
 {
-    public class DayDataObject : List<EventDataObject>
+    class DayDataObject : List<EventDataObject>
     {
         public DateTime Date { get; set; }
     }
