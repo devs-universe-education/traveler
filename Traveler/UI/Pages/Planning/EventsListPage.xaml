@@ -5,8 +5,25 @@
              x:Class="Traveler.UI.Pages.Planning.EventsListPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Список событий выбранного дня"
-                HorizontalOptions="CenterAndExpand" />
+           <!--  <Label Text="Список событий выбранного дня"
+                HorizontalOptions="CenterAndExpand" /> -->
+
+            <ListView ItemsSource="{Binding DayCollection}" Margin="25, 25, 25, 0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Path=Remind}" VerticalTextAlignment="Center"/>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Path=Title}"/>
+                                    <Label Text="{Binding Path=StartTime}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
             <Button Text="Выбрать событие (если есть)" Command="{Binding GoToEventDescriptionCommand}"/>
             <Button Text="+ Добавить событие" Command="{Binding GoToEventNameCommand}"/>
         </StackLayout>

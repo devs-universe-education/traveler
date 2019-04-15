@@ -10,6 +10,11 @@ namespace Traveler.DAL.DataServices.Mock
         {
             return GetMockData<SampleDataObject>("Traveler.DAL.Resources.Mock.Main.SampleDataObject.json");
         }
+
+        public Task<RequestResult<DayDataObject>> GetDayDataObject(CancellationToken ctx)
+        {
+            return GetMockData<DayDataObject>("Traveler.DAL.Resources.Mock.Main.day1.json");
+        }
     }
 }
 
