@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Traveler.DAL.DataObjects;
 
 namespace Traveler.DAL.DataServices {
-	public interface IMainDataService {
+	public interface IMainDataService
+    {
 		Task<RequestResult<SampleDataObject>> GetSampleDataObject(CancellationToken ctx);
 	}
 }
