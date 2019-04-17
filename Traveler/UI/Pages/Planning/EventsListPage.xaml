@@ -13,10 +13,10 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Path=Remind}" VerticalTextAlignment="Center"/>
+                                <Label Text="{Binding Remind}" VerticalTextAlignment="Center"/>
                                 <StackLayout Orientation="Vertical">
-                                    <Label Text="{Binding Path=Title}"/>
-                                    <Label Text="{Binding Path=StartTime}"/>
+                                    <Label Text="{Binding Title}"/>
+                                    <Label Text="{Binding StartTime}"/>
                                 </StackLayout>
                             </StackLayout>
                         </ViewCell>
