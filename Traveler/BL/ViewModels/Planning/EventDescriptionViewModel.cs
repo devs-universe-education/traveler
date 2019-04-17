@@ -15,11 +15,10 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
-
         public override async Task OnPageAppearing()
         {
             State = PageState.Loading;
-            var result = await DataServices.MainTravel.GetEventDataObject(CancellationToken);
+            var result = await DataServices.TravelMock.GetEventDataObject(CancellationToken);
             if (result.IsValid)
             {
                 EventObject = result.Data;

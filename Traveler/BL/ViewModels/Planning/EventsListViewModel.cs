@@ -13,20 +13,19 @@ namespace Traveler.BL.ViewModels.Planning
         public ICommand GoToEventDescriptionCommand => MakeNavigateToCommand(AppPages.EventDescription);
         public ICommand GoToEventNameCommand => MakeNavigateToCommand(AppPages.EventName);
 
-        public DayDataObject ListEventObject
+        public DayDataObject DayObject
         {
             get => Get<DayDataObject>();
             private set => Set(value);
         }
 
-
         public override async Task OnPageAppearing()
         {
             State = PageState.Loading;
-            var result = await DataServices.MainTravel.GetDayDataObject(CancellationToken);
+            var result = await DataServices.TravelMock.GetDayDataObject(CancellationToken);
             if (result.IsValid)
             {
-                ListEventObject = result.Data;
+                DayObject = result.Data;
                 State = PageState.Normal;
             }
             else
