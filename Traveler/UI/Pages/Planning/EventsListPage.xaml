@@ -5,10 +5,8 @@
              x:Class="Traveler.UI.Pages.Planning.EventsListPage">
     <ContentPage.Content>
         <StackLayout>
-            <!--<Label Text="Список событий выбранного дня"
-                HorizontalOptions="CenterAndExpand" />-->
 
-            <ListView ItemsSource="{Binding ListEventObject}" Margin="25, 25, 25, 0">
+            <ListView ItemsSource="{Binding DayObject}" Margin="25, 25, 25, 0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -26,6 +24,7 @@
             
             <Button Text="Выбрать событие (если есть)" Command="{Binding GoToEventDescriptionCommand}"/>
             <Button Text="+ Добавить событие" Command="{Binding GoToEventNameCommand}"/>
+            
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>
