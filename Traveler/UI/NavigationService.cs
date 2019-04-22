@@ -60,11 +60,30 @@ namespace Traveler.UI
             var initPage = GetInitializedPage(page.ToString());
             RootPush(initPage);
         }
+
+        public static void InitTabbed(params TabPageInitializer[] pagesSet)
+        {
+            Instance.InitializeTabbed(pagesSet);
+        }
+
+        private void InitializeTabbed(TabPageInitializer[] pagesSet)
+        {
+            var tabbedPage = new TabbedPage();
+            tabbedPage.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+
+            foreach(var item in pagesSet)
+                tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(item.Page.ToString())) { Title = item.Title, Icon = item.Icon });
+
+            Application.Current.MainPage = tabbedPage;
+        }
+
+        [Obsolete("Перегрузка устарела")]
         public static void InitTabbed(params AppPages[] childrenNames)
         {
             Instance.InitializeTabbed(childrenNames);
         }
 
+        [Obsolete("Перегрузка устарела")]
         void InitializeTabbed(params AppPages[] childrenNames)
         {
             var tabbedPage = new TabbedPage();
@@ -75,7 +94,6 @@ namespace Traveler.UI
 
             Application.Current.MainPage = tabbedPage;
         }
-
 
         public static NavigationService Instance => LazyInstance.Value;
 
@@ -351,8 +369,6 @@ namespace Traveler.UI
         #endregion
     }
 
-
-
     public class NavigationPushInfo
     {
         public string From { get; set; }
@@ -368,5 +384,12 @@ namespace Traveler.UI
         public NavigationMode Mode { get; set; } = NavigationMode.Normal;
         public TaskCompletionSource<bool> OnCompletedTask { get; set; }
         public string To { get; set; }
+    }
+
+    public struct TabPageInitializer
+    {
+        public AppPages Page { get; set; }
+        public string Title { get; set; }
+        public string Icon { get; set; }
     }
 }
