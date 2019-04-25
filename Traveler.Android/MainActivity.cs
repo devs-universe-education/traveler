@@ -2,6 +2,7 @@ using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using XamCal.Android;
 
 namespace Traveler.Android
 {
@@ -15,6 +16,7 @@ namespace Traveler.Android
 
             base.OnCreate(bundle);
             UserDialogs.Init(this);
+            XamCalRenderer.Init();
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
