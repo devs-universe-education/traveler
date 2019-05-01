@@ -19,9 +19,9 @@ namespace Traveler.DAL.DataServices.Mock
             return GetMockData<EventDataObject>("Traveler.DAL.Resources.Mock.Main.event1.json");       
         }
 
-        public Task<RequestResult<TravelDataObject>> GetTravelDataObject(CancellationToken ctx)
+        public Task<RequestResult<Travel>> GetTravelDataObject(CancellationToken ctx)
         {
-            return GetMockData<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travel1.json");
+            return GetMockData<Travel>("Traveler.DAL.Resources.Mock.Main.travel.json");
         }
     }
 }

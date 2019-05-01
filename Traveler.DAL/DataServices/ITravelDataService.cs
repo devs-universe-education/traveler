@@ -11,6 +11,6 @@ namespace Traveler.DAL.DataServices
     {
         Task<RequestResult<DayDataObject>> GetDayDataObject(CancellationToken ctx);
         Task<RequestResult<EventDataObject>> GetEventDataObject(CancellationToken ctx);
-        Task<RequestResult<TravelDataObject>> GetTravelDataObject(CancellationToken ctx);
+        Task<RequestResult<Travel>> GetTravelDataObject(CancellationToken ctx);
     }
 }
