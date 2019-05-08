@@ -21,7 +21,7 @@ namespace Traveler.BL.ViewModels.Planning
 
         public ICommand GoToEventsListCommand
         {
-            get => new Command((param) => NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "ID", param } }));
+            get => new Command((param) => NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "param", param } }));
         }
 
         public List<Travel> Travels

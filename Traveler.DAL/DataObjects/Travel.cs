@@ -4,9 +4,12 @@ using System.Text;
 
 namespace Traveler.DAL.DataObjects
 {
+    //[Table("Travels")]
     public class Travel
     {
-        public int ID { get; set; }
+        //[PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

@@ -32,12 +32,17 @@ namespace Traveler.BL.ViewModels.Planning
                 State = PageState.Error;
 
             //checking params
-            OnSampleCommand();
+            //OnSampleCommand();
         }
 
-        async void OnSampleCommand()
-        {
-            await ShowAlert("Параметры", $"{NavigationParams?.Count}", "OK");
-        }
+        //async void OnSampleCommand()
+        //{
+        //    if (NavigationParams == null)
+        //        return;
+
+        //    object obj = NavigationParams["param"];
+        //    var param = obj as Tuple<int, DateTime>;
+        //    await ShowAlert("Параметры", $"ID: {param.Item1} Day: {param.Item2.Day}", "OK");
+        //}
     }
 }
