@@ -39,11 +39,10 @@ namespace Traveler.DAL.dbSQLite
 
         public Task<List<Event>> GetEventsOfTheDayAsync(int IdTrav, DateTime date)
         {
-            var IdDay = database.QueryAsync<Day>("SELECT [ID] FROM [Days] " +
-                "WHERE [IdTravel] = {0}  AND [Date] = {1}", IdTrav, date);
-
             return database.QueryAsync<Event>("SELECT * FROM [Events]" +
-                "WHERE [IdDay] = {0}", IdDay);
+                "WHERE [IdDay] = " +
+                "(SELECT [ID] FROM [Days] " +
+                "WHERE [IdTravel] = {0}  AND [Date] = {1})", IdTrav, date);
         }
     }
 }
