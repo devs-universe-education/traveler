@@ -14,12 +14,22 @@ namespace Traveler.UI.Controls.TravelerCalendar
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TravelerCalendar : Grid
     {
+        #region CreateTravelTest
+
+        public int NewTravelStartDay { get; private set; }
+        public int NewTravelEndDay { get; private set; }
+        //public Tuple<int, int> NewTravelDays { get; private set; }
+
+        #endregion
+
         private Dictionary<int, Color> travelColors;
+        private Dictionary<int, CalendarFrame> frames;
 
         public TravelerCalendar()
         {
             //InitializeComponent();
             InitializeColors();
+            frames = new Dictionary<int, CalendarFrame>();
 
             this.HorizontalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
             this.VerticalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
@@ -69,6 +79,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 return;
 
             this.Children.Clear();
+            this.frames.Clear();
 
             int daysInMonth = DateTime.DaysInMonth(Year, Month);
 
@@ -99,18 +110,24 @@ namespace Traveler.UI.Controls.TravelerCalendar
             var numOfTravel = NumberOfTravel(day);
             Color color = numOfTravel.num == -1 ? Color.Transparent : travelColors[numOfTravel.num];
 
-            Frame frame = new Frame
+            CalendarFrame frame = new CalendarFrame()
             {
+                Day = day.Day,
+                
                 VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BorderColor = Color.Gray,
                 BackgroundColor = color,
                 Content = new Label() { Text = day.Day.ToString(), TextColor = Color.Black },
                 Padding = 1
             };
 
+            frames.Add(day.Day, frame);
+
             if(numOfTravel.travel != null)
                 frame.GestureRecognizers.Add(BuildTapGesture(day, numOfTravel.travel));
+            else
+                frame.GestureRecognizers.Add(BuildTapGesture());
             
             return frame;
         }
@@ -137,6 +154,69 @@ namespace Traveler.UI.Controls.TravelerCalendar
             tapGesture.CommandParameter = new Tuple<int, DateTime>(travel.Id, day);
 
             return tapGesture;
-        }        
+        }
+
+        private TapGestureRecognizer BuildTapGesture()
+        {
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += CalendarDay_Tapped;
+            return tapGesture;
+        }
+
+        private void CalendarDay_Tapped(object sender, EventArgs e)
+        {
+            var frame = sender as CalendarFrame;
+
+            if (NewTravelStartDay == 0)
+            {
+                NewTravelStartDay = frame.Day;
+                frame.BorderColor = Color.Yellow;
+                frame.BackgroundColor = Color.Yellow;
+            }
+            else if (NewTravelEndDay == 0)
+            {
+                if (frame.Day < NewTravelStartDay)
+                {
+                    var oldFrame = frames[NewTravelStartDay];
+                    NewTravelEndDay = oldFrame.Day;
+                }
+                else if (NewTravelStartDay < frame.Day)
+                {
+                    NewTravelEndDay = frame.Day;
+                }
+            }
+            else if (frame.Day != NewTravelStartDay && frame.Day != NewTravelEndDay)
+            {
+                if (frame.Day < NewTravelStartDay)
+                {
+                    var oldFrame = frames[NewTravelStartDay];
+                    oldFrame.BorderColor = Color.Gray;
+                    oldFrame.BackgroundColor = Color.Transparent;
+
+                    NewTravelStartDay = frame.Day;
+                }
+                else if (NewTravelEndDay < frame.Day)
+                {
+                    var oldFrame = frames[NewTravelEndDay];
+                    oldFrame.BorderColor = Color.Gray;
+                    oldFrame.BackgroundColor = Color.Transparent;
+
+                    NewTravelEndDay = frame.Day;
+                }
+            }
+
+            //repaint
+            if(NewTravelStartDay != 0 && NewTravelEndDay != 0)
+            {
+                for(int i = NewTravelStartDay; i <= NewTravelEndDay; i++)
+                {
+                    var paintFrame = frames[i];
+                    paintFrame.BorderColor = Color.Yellow;
+                    paintFrame.BackgroundColor = Color.Yellow;
+                }
+            }
+
+            NewTravelDays = new Tuple<int, int>(NewTravelStartDay, NewTravelEndDay);
+        }
     }
 }

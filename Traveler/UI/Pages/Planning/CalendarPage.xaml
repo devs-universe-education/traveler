@@ -8,7 +8,7 @@
     <ContentPage.Content>
         <StackLayout>
 
-            <controls:TravelerCalendar Month="{Binding Month}" Year="{Binding Year}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
+            <controls:TravelerCalendar x:Name="calendar" Month="{Binding Month}" Year="{Binding Year}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
 
             <!--<controls:Calendar Month="4" Year="2019">
                 <controls:Calendar.DayTemplate>
@@ -18,7 +18,7 @@
                 </controls:Calendar.DayTemplate>
             </controls:Calendar>-->
 
-            <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}"/>
+            <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" CommandParameter="{Binding Source={x:Reference calendar}, Path=NewTravelDays}"/>
             <Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>
             
         </StackLayout>

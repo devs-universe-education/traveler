@@ -84,5 +84,14 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 context.Redraw();
             }
         }
+
+        public Tuple<int, int> NewTravelDays
+        {
+            get => (Tuple<int, int>)GetValue(NewTravelDaysProperty);
+            set => SetValue(NewTravelDaysProperty, value);
+        }
+
+        public static readonly BindableProperty NewTravelDaysProperty =
+            BindableProperty.Create(nameof(NewTravelDays), typeof(Tuple<int, int>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay);
     }
 }

@@ -11,7 +11,7 @@ namespace Traveler.BL.ViewModels.Planning
 {
     class CalendarViewModel : BaseViewModel
     {
-        public ICommand GoToTravelNameCommand => MakeNavigateToCommand(AppPages.TravelName);
+        //public ICommand GoToTravelNameCommand => MakeNavigateToCommand(AppPages.TravelName);
         //public ICommand GoToEventsListCommand => MakeNavigateToCommand(AppPages.EventsList);
 
         #region TravelerCalendarTest
@@ -19,9 +19,25 @@ namespace Traveler.BL.ViewModels.Planning
         public int Year => DateTime.Now.Year;
         public int Month => DateTime.Now.Month;
 
+        public ICommand GoToTravelNameCommand
+        {
+            get
+            {
+                return new Command((parameter) =>
+                {
+                    NavigateTo(AppPages.TravelName, null, dataToLoad: new Dictionary<string, object>()
+                    {
+                        { "Year", Year },
+                        { "Month", Month },
+                        { "Days", parameter }
+                    });
+                });
+            }
+        }
+
         public ICommand GoToEventsListCommand
         {
-            get => new Command((param) => NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "param", param } }));
+            get => new Command((parameter) => NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "param", parameter } }));
         }
 
         public List<Travel> Travels
@@ -40,7 +56,7 @@ namespace Traveler.BL.ViewModels.Planning
                 State = PageState.Normal;
             }
             else
-                State = PageState.Error;            
+                State = PageState.Error;
         }
 
         #endregion
