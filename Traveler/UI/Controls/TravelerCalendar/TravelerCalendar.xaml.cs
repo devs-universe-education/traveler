@@ -23,13 +23,13 @@ namespace Traveler.UI.Controls.TravelerCalendar
         #endregion
 
         private Dictionary<int, Color> travelColors;
-        private Dictionary<int, CalendarFrame> frames;
+        private Dictionary<int, Frame> frames;
 
         public TravelerCalendar()
         {
             //InitializeComponent();
             InitializeColors();
-            frames = new Dictionary<int, CalendarFrame>();
+            frames = new Dictionary<int, Frame>();
 
             this.HorizontalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
             this.VerticalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
@@ -107,12 +107,12 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
         private View CreateView(DateTime day)
         {
-            var numOfTravel = NumberOfTravel(day);
-            Color color = numOfTravel.num == -1 ? Color.Transparent : travelColors[numOfTravel.num];
+            var (num, travel) = NumberOfTravel(day);
+            Color color = num == -1 ? Color.Transparent : travelColors[num];
 
-            CalendarFrame frame = new CalendarFrame()
+            Frame frame = new Frame()
             {
-                Day = day.Day,
+                BindingContext = day.Day,
                 
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -124,8 +124,8 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
             frames.Add(day.Day, frame);
 
-            if(numOfTravel.travel != null)
-                frame.GestureRecognizers.Add(BuildTapGesture(day, numOfTravel.travel));
+            if(travel != null)
+                frame.GestureRecognizers.Add(BuildTapGesture(day, travel));
             else
                 frame.GestureRecognizers.Add(BuildTapGesture());
             
@@ -165,44 +165,34 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
         private void CalendarDay_Tapped(object sender, EventArgs e)
         {
-            var frame = sender as CalendarFrame;
+            var frame = sender as Frame;
+            int frameDay = (int)frame.BindingContext;
 
             if (NewTravelStartDay == 0)
             {
-                NewTravelStartDay = frame.Day;
+                NewTravelStartDay = frameDay;
                 frame.BorderColor = Color.Yellow;
                 frame.BackgroundColor = Color.Yellow;
             }
             else if (NewTravelEndDay == 0)
             {
-                if (frame.Day < NewTravelStartDay)
+                if (frameDay < NewTravelStartDay)
                 {
                     var oldFrame = frames[NewTravelStartDay];
-                    NewTravelEndDay = oldFrame.Day;
+                    NewTravelEndDay = (int)oldFrame.BindingContext;
+                    NewTravelStartDay = frameDay;
                 }
-                else if (NewTravelStartDay < frame.Day)
+                else if (NewTravelStartDay < frameDay)
                 {
-                    NewTravelEndDay = frame.Day;
+                    NewTravelEndDay = frameDay;
                 }
             }
-            else if (frame.Day != NewTravelStartDay && frame.Day != NewTravelEndDay)
+            else if (frameDay != NewTravelStartDay && frameDay != NewTravelEndDay)
             {
-                if (frame.Day < NewTravelStartDay)
-                {
-                    var oldFrame = frames[NewTravelStartDay];
-                    oldFrame.BorderColor = Color.Gray;
-                    oldFrame.BackgroundColor = Color.Transparent;
-
-                    NewTravelStartDay = frame.Day;
-                }
-                else if (NewTravelEndDay < frame.Day)
-                {
-                    var oldFrame = frames[NewTravelEndDay];
-                    oldFrame.BorderColor = Color.Gray;
-                    oldFrame.BackgroundColor = Color.Transparent;
-
-                    NewTravelEndDay = frame.Day;
-                }
+                if (frameDay < NewTravelStartDay)
+                    NewTravelStartDay = frameDay;
+                else if (NewTravelEndDay < frameDay)
+                    NewTravelEndDay = frameDay;
             }
 
             //repaint
