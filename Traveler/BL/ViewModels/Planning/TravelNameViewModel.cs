@@ -9,34 +9,24 @@ namespace Traveler.BL.ViewModels.Planning
     {
         public DateTime NewTravelStartDate
         {
-            get => newTravelStartDate;
-            private set
-            {
-                newTravelStartDate = value;
-                OnPropertyChanged(nameof(NewTravelStartDate));
-            }
+            get => Get<DateTime>();
+            set => Set(value);
         }
-        public DateTime newTravelStartDate;
 
         public DateTime NewTravelEndDate
         {
-            get => newTravelEndDate;
-            private set
-            {
-                newTravelEndDate = value;
-                OnPropertyChanged(nameof(NewTravelEndDate));
-            }
+            get => Get<DateTime>();
+            set => Set(value);
         }
-        private DateTime newTravelEndDate;
 
         public override async Task OnPageAppearing()
         {
             var year = (int)(NavigationParams["Year"]);
             var month = (int)(NavigationParams["Month"]);
-            var days = (Tuple<int, int>)(NavigationParams["Days"]);
+            var (startDay, endDay) = (ValueTuple<int, int>)(NavigationParams["Days"]);
 
-            NewTravelStartDate = new DateTime(year, month, days.Item1);
-            NewTravelEndDate = new DateTime(year, month, days.Item2);
+            NewTravelStartDate = new DateTime(year, month, startDay);
+            NewTravelEndDate = new DateTime(year, month, endDay);
         }        
     }
 }

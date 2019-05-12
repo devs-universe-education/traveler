@@ -14,20 +14,14 @@ namespace Traveler.UI.Controls.TravelerCalendar
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TravelerCalendar : Grid
     {
-        #region CreateTravelTest
-
         public int NewTravelStartDay { get; private set; }
         public int NewTravelEndDay { get; private set; }
-        //public Tuple<int, int> NewTravelDays { get; private set; }
-
-        #endregion
 
         private Dictionary<int, Color> travelColors;
         private Dictionary<int, Frame> frames;
 
         public TravelerCalendar()
         {
-            //InitializeComponent();
             InitializeColors();
             frames = new Dictionary<int, Frame>();
 
@@ -195,18 +189,31 @@ namespace Traveler.UI.Controls.TravelerCalendar
                     NewTravelEndDay = frameDay;
             }
 
-            //repaint
-            if(NewTravelStartDay != 0 && NewTravelEndDay != 0)
+            PaintNewTravelDays();
+            NewTravelDays = (NewTravelStartDay, NewTravelEndDay);
+        }
+
+        private void PaintNewTravelDays()
+        {
+            for (int i = NewTravelStartDay; i <= NewTravelEndDay; i++)
             {
-                for(int i = NewTravelStartDay; i <= NewTravelEndDay; i++)
-                {
-                    var paintFrame = frames[i];
-                    paintFrame.BorderColor = Color.Yellow;
-                    paintFrame.BackgroundColor = Color.Yellow;
-                }
+                var paintFrame = frames[i];
+                paintFrame.BorderColor = Color.Yellow;
+                paintFrame.BackgroundColor = Color.Yellow;
+            }
+        }
+
+        public void ClearNewTravelDays(int startDay, int endDay)
+        {
+            for (int i = startDay; i <= endDay; i++)
+            {
+                var paintFrame = frames[i];
+                paintFrame.BorderColor = Color.Gray;
+                paintFrame.BackgroundColor = Color.Transparent;
             }
 
-            NewTravelDays = new Tuple<int, int>(NewTravelStartDay, NewTravelEndDay);
+            NewTravelStartDay = 0;
+            NewTravelEndDay = 0;
         }
     }
 }

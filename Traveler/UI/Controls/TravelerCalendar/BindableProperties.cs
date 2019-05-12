@@ -85,13 +85,28 @@ namespace Traveler.UI.Controls.TravelerCalendar
             }
         }
 
-        public Tuple<int, int> NewTravelDays
+        public ValueTuple<int, int> NewTravelDays
         {
-            get => (Tuple<int, int>)GetValue(NewTravelDaysProperty);
+            get => (ValueTuple<int, int>)GetValue(NewTravelDaysProperty);
             set => SetValue(NewTravelDaysProperty, value);
         }
 
         public static readonly BindableProperty NewTravelDaysProperty =
-            BindableProperty.Create(nameof(NewTravelDays), typeof(Tuple<int, int>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay);
+            BindableProperty.Create(nameof(NewTravelDays), typeof(ValueTuple<int, int>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnNewTravelDaysPropertyChanged);
+
+        private static void OnNewTravelDaysPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var context = (TravelerCalendar)bindable;
+            if (context != null)
+            {
+                context.NewTravelDays = (ValueTuple<int, int>)newValue;
+                
+                if(context.NewTravelDays == (0, 0))
+                {
+                    var (startDay, endDay) = (ValueTuple<int, int>)oldValue;
+                    context.ClearNewTravelDays(startDay, endDay);
+                }
+            }
+        }
     }
 }
