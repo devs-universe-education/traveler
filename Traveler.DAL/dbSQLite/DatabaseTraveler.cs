@@ -45,7 +45,25 @@ namespace Traveler.DAL.dbSQLite
                 "WHERE [IdTravel] = {0}  AND [Date] = {1})", IdTrav, date);
         }
 
+        public Task<List<Event>> GetEventAsync(int Id)
+        {
+            return database.QueryAsync<Event>("SELECT * FROM [Events]" +
+                                              "WHERE [Id] = {0}", Id);
+        }
+
         public Task<int> SaveItemTravelAsync(Travel item)
+        {
+            if (item.Id != 0)
+            {
+                return database.UpdateAsync(item);
+            }
+            else
+            {
+                return database.InsertAsync(item);
+            }
+        }
+
+        public Task<int> SaveItemDayAsync(Travel item)
         {
             if (item.Id != 0)
             {
@@ -67,8 +85,7 @@ namespace Traveler.DAL.dbSQLite
             {
                 return database.InsertAsync(item);
             }
-        }
-
+        }   
 
         public Task<int> DeleteItemTravelAsync(Travel item)
         {
@@ -78,6 +95,16 @@ namespace Traveler.DAL.dbSQLite
         public Task<int> DeleteItemEventAsync(Event item)
         {
             return database.DeleteAsync(item);
+        }
+
+        public Task<List<Day>> DeleteItemsDaysByTravelAsync(int IdTravel)
+        {
+            return database.QueryAsync<Day>("DELETE FROM [Day] WHERE [IdTravel] = {0}", IdTravel);
+        }
+
+        public Task<List<Event>> DeleteItemsEventsByDayAsync(int IdDay)
+        {
+            return database.QueryAsync<Event>("DELETE FROM [Event] WHERE [IdDayl] = {0}", IdDay);
         }
 
     }
