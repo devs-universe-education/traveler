@@ -205,11 +205,20 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
         public void ClearNewTravelDays(int startDay, int endDay)
         {
-            for (int i = startDay; i <= endDay; i++)
+            if (endDay == 0)
             {
-                var paintFrame = frames[i];
+                var paintFrame = frames[startDay];
                 paintFrame.BorderColor = Color.Gray;
                 paintFrame.BackgroundColor = Color.Transparent;
+            }
+            else
+            {
+                for (int i = startDay; i <= endDay; i++)
+                {
+                    var paintFrame = frames[i];
+                    paintFrame.BorderColor = Color.Gray;
+                    paintFrame.BackgroundColor = Color.Transparent;
+                }
             }
 
             NewTravelStartDay = 0;
