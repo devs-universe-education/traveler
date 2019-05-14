@@ -22,7 +22,7 @@ namespace Traveler.DAL.dbSQLite
             database.CreateTableAsync<Event>().Wait();
         }
 
-        public Task<List<Travel>> GetItemsTravelAync()
+        public Task<List<Travel>> GetItemsTravelAsync()
         {
             return database.Table<Travel>().ToListAsync();
         }
@@ -44,5 +44,41 @@ namespace Traveler.DAL.dbSQLite
                 "(SELECT [ID] FROM [Days] " +
                 "WHERE [IdTravel] = {0}  AND [Date] = {1})", IdTrav, date);
         }
+
+        public Task<int> SaveItemTravelAsync(Travel item)
+        {
+            if (item.Id != 0)
+            {
+                return database.UpdateAsync(item);
+            }
+            else
+            {
+                return database.InsertAsync(item);
+            }
+        }
+
+        public Task<int> SaveItemEventAsync(Event item)
+        {
+            if (item.Id != 0)
+            {
+                return database.UpdateAsync(item);
+            }
+            else
+            {
+                return database.InsertAsync(item);
+            }
+        }
+
+
+        public Task<int> DeleteItemTravelAsync(Travel item)
+        {
+            return database.DeleteAsync(item);
+        }
+
+        public Task<int> DeleteItemEventAsync(Event item)
+        {
+            return database.DeleteAsync(item);
+        }
+
     }
 }
