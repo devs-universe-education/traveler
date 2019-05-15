@@ -1,4 +1,5 @@
 using System;
+using Traveler.DAL.dbSQLite;
 
 namespace Traveler.DAL.DataServices
 {
@@ -8,6 +9,8 @@ namespace Traveler.DAL.DataServices
 
         public static ITravelDataService TravelMock { get; private set; }
 
+        public static DatabaseTraveler TravelDB { get; private set; }
+
         public static void Init(bool isMock)
         {
             if (isMock)
@@ -16,10 +19,10 @@ namespace Traveler.DAL.DataServices
             }
             else
             {
-                throw new NotImplementedException("Online Data Services not implemented");
+                TravelDB = new DatabaseTraveler();
+                //throw new NotImplementedException("Online Data Services not implemented");
             }
         }
-
     }
 }
 
