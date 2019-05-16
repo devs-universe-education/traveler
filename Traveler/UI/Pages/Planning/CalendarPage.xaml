@@ -2,20 +2,13 @@
 <pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
                 xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                xmlns:controls="clr-namespace:XamCal.Abstractions;assembly=XamCal.Abstractions"
+                xmlns:controls="clr-namespace:Traveler.UI.Controls.TravelerCalendar"
                 x:Class="Traveler.UI.Pages.Planning.CalendarPage"
                 Title="CalendarPage">
     <ContentPage.Content>
         <StackLayout>
-            
-            <controls:Calendar Month="4" Year="2019">
-                <controls:Calendar.DayTemplate>
-                    <DataTemplate>
-                        <Label Text="{Binding DayOfMonth}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
-                    </DataTemplate>
-                </controls:Calendar.DayTemplate>
-            </controls:Calendar>
 
+            <controls:TravelerCalendar Month="{Binding Month}" Year="{Binding Year}" NewTravelDays="{Binding NewTravelDays}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
             <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}"/>
             <Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>
             

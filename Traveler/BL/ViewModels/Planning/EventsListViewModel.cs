@@ -9,7 +9,7 @@ using Traveler.DAL.DataServices;
 namespace Traveler.BL.ViewModels.Planning
 {
     class EventsListViewModel : BaseViewModel
-    {
+    {        
         public ICommand GoToEventDescriptionCommand => MakeNavigateToCommand(AppPages.EventDescription);
         public ICommand GoToEventNameCommand => MakeNavigateToCommand(AppPages.EventName);
 
@@ -30,7 +30,19 @@ namespace Traveler.BL.ViewModels.Planning
             }
             else
                 State = PageState.Error;
+
+            //checking params
+            //OnSampleCommand();
         }
 
+        //async void OnSampleCommand()
+        //{
+        //    if (NavigationParams == null)
+        //        return;
+
+        //    object obj = NavigationParams["param"];
+        //    var param = obj as Tuple<int, DateTime>;
+        //    await ShowAlert("Параметры", $"ID: {param.Item1} Day: {param.Item2.Day}", "OK");
+        //}
     }
 }

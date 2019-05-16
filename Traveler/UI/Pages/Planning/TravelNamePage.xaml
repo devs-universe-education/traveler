@@ -5,9 +5,9 @@
              x:Class="Traveler.UI.Pages.Planning.TravelNamePage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Задание имени путешествия"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <DatePicker Date="{Binding NewTravelStartDate}" />
+            <DatePicker Date="{Binding NewTravelEndDate}" />
+            <Entry Placeholder="Название путешествия" />
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>
