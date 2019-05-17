@@ -6,7 +6,7 @@
     <ContentPage.Content>
         <StackLayout>
 
-            <ListView ItemsSource="{Binding DayObject}" Margin="25, 25, 25, 0">
+            <!--<ListView ItemsSource="{Binding DayObject}" Margin="25, 25, 25, 0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -20,7 +20,7 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
             
             <Button Text="Выбрать событие (если есть)" Command="{Binding GoToEventDescriptionCommand}"/>
             <Button Text="+ Добавить событие" Command="{Binding GoToEventNameCommand}"/>

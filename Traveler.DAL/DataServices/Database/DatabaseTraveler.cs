@@ -21,70 +21,80 @@ namespace Traveler.DAL.DataServices.Database
             database.CreateTableAsync<TravelDataObject>().Wait();
             database.CreateTableAsync<DayDataObject>().Wait();
             database.CreateTableAsync<EventDataObject>().Wait();
-        }           
-                  
-        public Task<int> SaveItemDayAsync(DayDataObject item)
-        {
-            if (item.Id != 0)
-            {
-                return database.UpdateAsync(item);
-            }
-            else
-            {
-                return database.InsertAsync(item);
-            }
-        }     
-        
-        //--------------------------------------------------------------------------------------------------------------
+        }
 
         public async Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx)
         {
-            var list = await database.Table<TravelDataObject>().ToListAsync();
-            return new RequestResult<List<TravelDataObject>>(list, RequestStatus.Ok);
+            try
+            {
+                var list = await database.Table<TravelDataObject>().ToListAsync();
+                return new RequestResult<List<TravelDataObject>>(list, RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult<List<TravelDataObject>>(null, RequestStatus.DatabaseError);
+            }
         }
 
         public async Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
-            if (item.Id != 0)
+            try
             {
-                await database.UpdateAsync(item);              
-            }
-            else
-            {
-                await database.RunInTransactionAsync(tran =>
+                if (item.Id != 0)
                 {
-                    var id = tran.Insert(item);
-
-                    for(var date = item.StartDate; date <= item.EndDate; date.AddDays(1))
+                    //await database.UpdateAsync(item);
+                }
+                else
+                {
+                    await database.RunInTransactionAsync(tran =>
                     {
-                        DayDataObject day = new DayDataObject
-                        {
-                            IdTravel = id,
-                            Date = date
-                        };
+                        tran.Insert(item); //add travel
 
-                        tran.Insert(day);
-                    }         
-                });             
+                        for (DateTime date = item.StartDate; date <= item.EndDate; date = date.AddDays(1.0))
+                        {
+                            DayDataObject day = new DayDataObject() { IdTravel = item.Id, Date = date };
+                            tran.Insert(day); //add day
+                        }
+                    });
+                }
+
+                return new RequestResult(RequestStatus.Ok);
             }
-            return new RequestResult(RequestStatus.Ok);
+            catch (Exception)
+            {
+                return new RequestResult(RequestStatus.DatabaseError);
+            }
         }
 
         public async Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
-            await database.RunInTransactionAsync(tran =>
+            try
             {
-                var id = tran.Delete(item);
-                tran.Execute("DELETE FROM [Days] WHERE [IdTravel] = {0}", id);
-            });
+                await database.RunInTransactionAsync(tran =>
+                {
+                    tran.Delete(item); //delete travel
 
-            return new RequestResult(RequestStatus.Ok);
+                    var days = tran.Query<DayDataObject>("SELECT * FROM [Days] WHERE [IdTravel] = ?", item.Id); //get days of travel
+                    foreach (var day in days)
+                    {
+                        tran.Execute("DELETE FROM [Events] WHERE [IdDay] = ?", day.Id); //delete events of day
+                    }
+
+                    tran.Execute("DELETE FROM [Days] WHERE [IdTravel] = ?", item.Id); //delete days of travel
+                });
+
+                return new RequestResult(RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult(RequestStatus.DatabaseError);
+            }
         }
 
         public async Task<RequestResult<List<EventDataObject>>> GetEventAsync(int id, CancellationToken ctx)
         {
             var evnt = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events]" +
-                                                                  "WHERE [Id] = {0}", id);
+                                                                  "WHERE [Id] = ?", id);
 
             return new RequestResult<List<EventDataObject>>(evnt, RequestStatus.Ok);
         }
@@ -94,7 +104,7 @@ namespace Traveler.DAL.DataServices.Database
             var events = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events]" +
                                                                     "WHERE [IdDay] = " +
                                                                     "(SELECT [ID] FROM [Days] " +
-                                                                    "WHERE [IdTravel] = {0}  AND [Date] = {1})", idTrav, date);
+                                                                    "WHERE [IdTravel] = ?  AND [Date] = ?)", idTrav, date);
             return new RequestResult<List<EventDataObject>>(events, RequestStatus.Ok);
         }
 
@@ -119,30 +129,7 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult> DeleteEventsByDayAsync(int idDay, CancellationToken ctx)
         {
-            await database.ExecuteAsync("DELETE FROM [Events] WHERE [IdDay] = {0}", idDay);
-            return new RequestResult(RequestStatus.Ok);
-        }
-
-
-
-        public Task<RequestResult<DayDataObject>> GetDayDataObject(CancellationToken ctx)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RequestResult<EventDataObject>> GetEventDataObject(CancellationToken ctx)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RequestResult<TravelDataObject>> GetTravelDataObject(CancellationToken ctx)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<RequestResult> DeleteItemsDaysByTravelAsync(int idTravel, CancellationToken ctx)
-        {
-            await database.ExecuteAsync("DELETE FROM [Days] WHERE [IdTravel] = {0}", idTravel);
+            await database.ExecuteAsync("DELETE FROM [Events] WHERE [IdDay] = ?", idDay);
             return new RequestResult(RequestStatus.Ok);
         }
     }

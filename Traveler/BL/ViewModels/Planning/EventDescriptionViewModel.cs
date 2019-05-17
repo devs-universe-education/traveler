@@ -15,18 +15,17 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
-        public override async Task OnPageAppearing()
-        {
-            State = PageState.Loading;
-            var result = await DataServices.TravelerDataService.GetEventDataObject(CancellationToken);
-            if (result.IsValid)
-            {
-                EventObject = result.Data;
-                State = PageState.Normal;
-            }
-            else
-                State = PageState.Error;
-        }
-
+        //public override async Task OnPageAppearing()
+        //{
+        //    State = PageState.Loading;
+        //    var result = await DataServices.TravelerDataService.GetEventAsync(0, CancellationToken);
+        //    if (result.IsValid)
+        //    {
+        //        EventObject = result.Data;
+        //        State = PageState.Normal;
+        //    }
+        //    else
+        //        State = PageState.Error;
+        //}
     }
 }
