@@ -18,10 +18,14 @@ namespace Traveler.DAL.DataServices
         Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx);
 
+        Task<RequestResult> DeleteItemsDaysByTravelAsync(int idTravel, CancellationToken ctx);
+
         Task<RequestResult<List<EventDataObject>>> GetEventAsync(int id, CancellationToken ctx);
         Task<RequestResult<List<EventDataObject>>> GetEventsOfTheDayAsync(int idTrav, DateTime date, CancellationToken ctx);        
         Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteEventsByDayAsync(int idDay, CancellationToken ctx);
+
+       
     }
 }
