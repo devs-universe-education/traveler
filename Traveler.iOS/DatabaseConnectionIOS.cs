@@ -6,7 +6,7 @@ using System.Text;
 
 using Foundation;
 using SQLite;
-using Traveler.DAL.dbSQLite;
+using Traveler.DAL.DataServices.Database;
 using Traveler.iOS;
 using UIKit;
 

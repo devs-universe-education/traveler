@@ -22,7 +22,7 @@ namespace Traveler.BL.ViewModels.Planning
         public override async Task OnPageAppearing()
         {
             State = PageState.Loading;
-            var result = await DataServices.TravelMock.GetDayDataObject(CancellationToken);
+            var result = await DataServices.TravelerDataService.GetDayDataObject(CancellationToken);
             if (result.IsValid)
             {
                 DayObject = result.Data;

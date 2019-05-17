@@ -12,7 +12,7 @@ using Android.Widget;
 using System.IO;
 using SQLite;
 using Traveler.Android;
-using Traveler.DAL.dbSQLite;
+using Traveler.DAL.DataServices.Database;
 
 [assembly: Xamarin.Forms.Dependency(typeof(DatabaseConnectionAndroid))]
 namespace Traveler.Android

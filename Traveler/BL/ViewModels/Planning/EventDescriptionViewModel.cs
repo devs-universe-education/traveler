@@ -18,7 +18,7 @@ namespace Traveler.BL.ViewModels.Planning
         public override async Task OnPageAppearing()
         {
             State = PageState.Loading;
-            var result = await DataServices.TravelMock.GetEventDataObject(CancellationToken);
+            var result = await DataServices.TravelerDataService.GetEventDataObject(CancellationToken);
             if (result.IsValid)
             {
                 EventObject = result.Data;

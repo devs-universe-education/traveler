@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Traveler.DAL.dbSQLite
+namespace Traveler.DAL.DataServices.Database
 {
     public interface IDatabaseConnection
     {
