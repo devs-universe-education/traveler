@@ -11,6 +11,11 @@ namespace Traveler.DAL.DataServices.Mock
     {
         public Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx)
         {
+            throw new NotImplementedException();
+        }
+
+        public Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx)
+        {
             return GetMockDataList<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travel1.json");
         }
 
@@ -24,12 +29,17 @@ namespace Traveler.DAL.DataServices.Mock
             throw new NotImplementedException();
         }
 
-        public Task<RequestResult<List<EventDataObject>>> GetEventAsync(int id, CancellationToken ctx)
+        public Task<RequestResult<DayDataObject>> GetDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
-            return GetMockDataList<EventDataObject>("Traveler.DAL.Resources.Mock.Main.event1.json");
+            throw new NotImplementedException();
         }
 
-        public Task<RequestResult<List<EventDataObject>>> GetEventsOfTheDayAsync(int idTrav, DateTime date, CancellationToken ctx)
+        public Task<RequestResult<List<EventDataObject>>> GetEventsOfDayAsync(int idTravel, DateTime day, CancellationToken ctx)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RequestResult<List<EventDataObject>>> GetEventsOfCurrentDayAsync(DateTime today, CancellationToken ctx)
         {
             throw new NotImplementedException();
         }
@@ -40,11 +50,6 @@ namespace Traveler.DAL.DataServices.Mock
         }
 
         public Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RequestResult> DeleteEventsByDayAsync(int idDay, CancellationToken ctx)
         {
             throw new NotImplementedException();
         }

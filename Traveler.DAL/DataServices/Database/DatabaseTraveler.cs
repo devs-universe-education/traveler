@@ -36,6 +36,25 @@ namespace Traveler.DAL.DataServices.Database
             }
         }
 
+        public async Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx)
+        {
+            try
+            {
+                DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
+                DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
+                var list = await database.QueryAsync<TravelDataObject>("SELECT * FROM [Travels]" +
+                                                                       "WHERE ([StartDate] BETWEEN ? AND ?) OR ([EndDate] BETWEEN ? AND ?)",
+                                                                       firstDayOfMonth, lastDayOfMonth, firstDayOfMonth, lastDayOfMonth);
+
+                return new RequestResult<List<TravelDataObject>>(list, RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult<List<TravelDataObject>>(null, RequestStatus.DatabaseError);
+            }
+        }
+
         public async Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
             try
@@ -91,46 +110,81 @@ namespace Traveler.DAL.DataServices.Database
             }
         }
 
-        public async Task<RequestResult<List<EventDataObject>>> GetEventAsync(int id, CancellationToken ctx)
+        public async Task<RequestResult<DayDataObject>> GetDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
-            var evnt = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events]" +
-                                                                  "WHERE [Id] = ?", id);
-
-            return new RequestResult<List<EventDataObject>>(evnt, RequestStatus.Ok);
+            try
+            {
+                var dayObject = await database.Table<DayDataObject>().Where(x => x.IdTravel == idTravel && x.Date == day).FirstOrDefaultAsync();
+                return new RequestResult<DayDataObject>(dayObject, RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult<DayDataObject>(null, RequestStatus.DatabaseError);
+            }
         }
 
-        public async Task<RequestResult<List<EventDataObject>>> GetEventsOfTheDayAsync(int idTrav, DateTime date, CancellationToken ctx)
+        public async Task<RequestResult<List<EventDataObject>>> GetEventsOfDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
-            var events = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events]" +
-                                                                    "WHERE [IdDay] = " +
-                                                                    "(SELECT [ID] FROM [Days] " +
-                                                                    "WHERE [IdTravel] = ?  AND [Date] = ?)", idTrav, date);
-            return new RequestResult<List<EventDataObject>>(events, RequestStatus.Ok);
+            try
+            {
+                var events = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events] WHERE [IdDay] = " +
+                                                                        "(SELECT [ID] FROM [Days] WHERE [IdTravel] = ? AND [Date] = ?)", idTravel, day);
+
+                return new RequestResult<List<EventDataObject>>(events, RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult<List<EventDataObject>>(null, RequestStatus.DatabaseError);
+            }
+        }
+
+        public async Task<RequestResult<List<EventDataObject>>> GetEventsOfCurrentDayAsync(DateTime today, CancellationToken ctx)
+        {
+            try
+            {
+                var events = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events] WHERE [IdDay] = " +
+                                                                        "(SELECT [ID] FROM [Days] WHERE [Date] = ?)", today);
+
+                return new RequestResult<List<EventDataObject>>(events, RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult<List<EventDataObject>>(null, RequestStatus.DatabaseError);
+            }
         }
 
         public async Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx)
         {
-            if (item.Id != 0)
+            try
             {
-                await database.UpdateAsync(item);
+                if (item.Id != 0)
+                {
+                    await database.UpdateAsync(item);
+                }
+                else
+                {
+                    await database.InsertAsync(item);
+                }
+
+                return new RequestResult(RequestStatus.Ok);
             }
-            else
+            catch (Exception)
             {
-                await database.InsertAsync(item);
+                return new RequestResult(RequestStatus.DatabaseError);
             }
-            return new RequestResult(RequestStatus.Ok);
         }
 
         public async Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)
         {
-            await database.DeleteAsync(item);
-            return new RequestResult(RequestStatus.Ok);
-        }
-
-        public async Task<RequestResult> DeleteEventsByDayAsync(int idDay, CancellationToken ctx)
-        {
-            await database.ExecuteAsync("DELETE FROM [Events] WHERE [IdDay] = ?", idDay);
-            return new RequestResult(RequestStatus.Ok);
-        }
+            try
+            {
+                await database.DeleteAsync(item);
+                return new RequestResult(RequestStatus.Ok);
+            }
+            catch (Exception)
+            {
+                return new RequestResult(RequestStatus.DatabaseError);
+            }
+        }        
     }
 }

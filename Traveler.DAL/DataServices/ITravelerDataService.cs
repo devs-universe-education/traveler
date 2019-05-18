@@ -10,13 +10,15 @@ namespace Traveler.DAL.DataServices
     public interface ITravelerDataService
     {
         Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx);
+        Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx);
         Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx);
 
-        Task<RequestResult<List<EventDataObject>>> GetEventAsync(int id, CancellationToken ctx);
-        Task<RequestResult<List<EventDataObject>>> GetEventsOfTheDayAsync(int idTrav, DateTime date, CancellationToken ctx);        
+        Task<RequestResult<DayDataObject>> GetDayAsync(int idTravel, DateTime day, CancellationToken ctx);
+
+        Task<RequestResult<List<EventDataObject>>> GetEventsOfDayAsync(int idTravel, DateTime day, CancellationToken ctx);
+        Task<RequestResult<List<EventDataObject>>> GetEventsOfCurrentDayAsync(DateTime today, CancellationToken ctx);        
         Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx);
-        Task<RequestResult> DeleteEventsByDayAsync(int idDay, CancellationToken ctx);       
     }
 }
