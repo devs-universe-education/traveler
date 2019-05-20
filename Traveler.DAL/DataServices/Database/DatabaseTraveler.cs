@@ -6,21 +6,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using SQLite;
 using Traveler.DAL.DataObjects;
-using Xamarin.Forms;
+
 
 namespace Traveler.DAL.DataServices.Database
 {
     public class DatabaseTraveler : ITravelerDataService
     {
         readonly SQLiteAsyncConnection database;
-       
-        public DatabaseTraveler()
-        {
-            database = DependencyService.Get<IDatabaseConnection>().DbConnection();
 
-            database.CreateTableAsync<TravelDataObject>().Wait();
-            database.CreateTableAsync<DayDataObject>().Wait();
-            database.CreateTableAsync<EventDataObject>().Wait();
+        public DatabaseTraveler(string connectionstring)
+        {
+            database = new SQLiteAsyncConnection(connectionstring);
+
+            database.CreateTablesAsync<TravelDataObject, DayDataObject, EventDataObject>();
         }
 
         public async Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx)
@@ -57,6 +55,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
+            if (item == null)
+                return new RequestResult(RequestStatus.InvalidRequest);
+
             try
             {
                 if (item.Id != 0)
@@ -87,6 +88,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
+            if (item == null)
+                return new RequestResult(RequestStatus.InvalidRequest);
+
             try
             {
                 await database.RunInTransactionAsync(tran =>
@@ -112,6 +116,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult<DayDataObject>> GetDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
+            if (idTravel <= 0)
+                return new RequestResult<DayDataObject>(null, RequestStatus.InvalidRequest);
+
             try
             {
                 var dayObject = await database.Table<DayDataObject>().Where(x => x.IdTravel == idTravel && x.Date == day).FirstOrDefaultAsync();
@@ -125,6 +132,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult<List<EventDataObject>>> GetEventsOfDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
+            if (idTravel <= 0)
+                return new RequestResult<List<EventDataObject>>(null, RequestStatus.InvalidRequest);
+
             try
             {
                 var events = await database.QueryAsync<EventDataObject>("SELECT * FROM [Events] WHERE [IdDay] = " +
@@ -155,6 +165,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx)
         {
+            if (item == null)
+                return new RequestResult(RequestStatus.InvalidRequest);
+
             try
             {
                 if (item.Id != 0)
@@ -176,6 +189,9 @@ namespace Traveler.DAL.DataServices.Database
 
         public async Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)
         {
+            if (item == null)
+                return new RequestResult(RequestStatus.InvalidRequest);
+
             try
             {
                 await database.DeleteAsync(item);

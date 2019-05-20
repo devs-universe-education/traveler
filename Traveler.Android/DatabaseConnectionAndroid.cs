@@ -19,13 +19,11 @@ namespace Traveler.Android
 {
     class DatabaseConnectionAndroid : IDatabaseConnection
     {
-        public SQLiteAsyncConnection DbConnection()
+        public string GetConnectionString()
         {
-            var dbName = "TravelerDB.db3";
-            var path = Path.Combine(System.Environment.
-                GetFolderPath(System.Environment.
-                SpecialFolder.Personal), dbName);
-            return new SQLiteAsyncConnection(path);
+            string dbName = "TravelerDB.db3";
+            string path = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), dbName);
+            return path;
         }
     }
 }

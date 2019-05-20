@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Traveler.DAL.DataServices.Database
+namespace Traveler
 {
     public interface IDatabaseConnection
     {
-        SQLite.SQLiteAsyncConnection DbConnection();
+        string GetConnectionString();
     }
 }

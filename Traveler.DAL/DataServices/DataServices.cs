@@ -9,8 +9,7 @@ namespace Traveler.DAL.DataServices
 
         public static ITravelerDataService TravelerDataService { get; private set; }
 
-       
-        public static void Init(bool isMock)
+        public static void Init(bool isMock, string connectionString)
         {
             if (isMock)
             {
@@ -18,7 +17,8 @@ namespace Traveler.DAL.DataServices
             }
             else
             {
-                TravelerDataService = new Database.DatabaseTraveler();               
+
+                TravelerDataService = new Database.DatabaseTraveler(connectionString);               
             }
         }
     }

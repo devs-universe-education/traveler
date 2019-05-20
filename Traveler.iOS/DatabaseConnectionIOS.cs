@@ -15,14 +15,13 @@ namespace Traveler.iOS
 {
     public class DatabaseConnectionIOS : IDatabaseConnection
     {
-        public SQLiteAsyncConnection DbConnection()
+        public string GetConnectionString()
         {
-            var dbName = "TravelerDB.db3";
-            string personalFolder = System.Environment.
-                GetFolderPath(Environment.SpecialFolder.Personal);
+            string dbName = "TravelerDB.db3";
+            string personalFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string libraryFolder = Path.Combine(personalFolder, "..", "Librray");
-            var path = Path.Combine(libraryFolder, dbName);
-            return new SQLiteAsyncConnection(path);
+            string path = Path.Combine(libraryFolder, dbName);
+            return path;
         }
     }
 }
