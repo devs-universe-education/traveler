@@ -40,19 +40,19 @@ namespace Traveler.BL.ViewModels.Planning
             get => new Command((parameter) => NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } }));
         }
 
-        public List<Travel> Travels
+        public List<TravelDataObject> Travels
         {
-            get => Get<List<Travel>>();
+            get => Get<List<TravelDataObject>>();
             private set => Set(value);
         }
 
         public override async Task OnPageAppearing()
         {
             State = PageState.Loading;
-            var result = await DataServices.TravelMock.GetTravelDataObject(CancellationToken);
+            var result = await DataServices.TravelerDataService.GetTravelsOfMonthAsync(DateTime.Today, CancellationToken);
             if (result.IsValid)
             {
-                Travels = new List<Travel>() { result.Data };
+                Travels = result.Data;
                 State = PageState.Normal;
             }
             else

@@ -7,7 +7,7 @@ using Traveler.DAL.DataObjects;
 
 namespace Traveler.DAL.DataServices.Mock
 {
-    class MockTravelDataService : BaseMockDataService, ITravelerDataService
+    class MockTravelerDataService : BaseMockDataService, ITravelerDataService
     {
         public Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx)
         {
@@ -16,7 +16,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx)
         {
-            return GetMockDataList<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travel1.json");
+            return GetMockDataList<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travel.json");
         }
 
         public Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)

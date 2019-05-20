@@ -1,5 +1,4 @@
 using System;
-using Traveler.DAL.DataServices.Database;
 
 namespace Traveler.DAL.DataServices
 {
@@ -13,7 +12,7 @@ namespace Traveler.DAL.DataServices
         {
             if (isMock)
             {
-                TravelerDataService = new Mock.MockTravelDataService();
+                TravelerDataService = new Mock.MockTravelerDataService();
             }
             else
             {

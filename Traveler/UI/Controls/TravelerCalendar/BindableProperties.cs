@@ -47,21 +47,21 @@ namespace Traveler.UI.Controls.TravelerCalendar
             }
         }
 
-        public IEnumerable<Travel> Travels
+        public IEnumerable<TravelDataObject> Travels
         {
-            get => (IEnumerable<Travel>)GetValue(TravelsProperty);
+            get => (IEnumerable<TravelDataObject>)GetValue(TravelsProperty);
             set => SetValue(TravelsProperty, value);
         }
 
         public static readonly BindableProperty TravelsProperty =
-            BindableProperty.Create(nameof(Travels), typeof(IEnumerable<Travel>), typeof(TravelerCalendar), propertyChanged: OnTravelsPropertyChanged);
+            BindableProperty.Create(nameof(Travels), typeof(IEnumerable<TravelDataObject>), typeof(TravelerCalendar), propertyChanged: OnTravelsPropertyChanged);
 
         private static void OnTravelsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var context = (TravelerCalendar)bindable;
             if (context != null)
             {
-                context.Travels = (IEnumerable<Travel>)newValue;
+                context.Travels = (IEnumerable<TravelDataObject>)newValue;
                 context.Redraw();
             }
         }

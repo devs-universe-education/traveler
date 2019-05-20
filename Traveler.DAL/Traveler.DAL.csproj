@@ -5,25 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Mock\Main\day1.json" />
-    <None Remove="Resources\Mock\Main\day2.json" />
     <None Remove="Resources\Mock\Main\event1.json" />
     <None Remove="Resources\Mock\Main\event2.json" />
     <None Remove="Resources\Mock\Main\SampleDataObject.json" />
     <None Remove="Resources\Mock\Main\travel.json" />
-    <None Remove="Resources\Mock\Main\travel1.json" />
-    <None Remove="Resources\Mock\Main\travel2.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Mock\Main\day1.json" />
-    <EmbeddedResource Include="Resources\Mock\Main\day2.json" />
     <EmbeddedResource Include="Resources\Mock\Main\event1.json" />
     <EmbeddedResource Include="Resources\Mock\Main\event2.json" />
     <EmbeddedResource Include="Resources\Mock\Main\SampleDataObject.json" />
     <EmbeddedResource Include="Resources\Mock\Main\travel.json" />
-    <EmbeddedResource Include="Resources\Mock\Main\travel1.json" />
-    <EmbeddedResource Include="Resources\Mock\Main\travel2.json" />
   </ItemGroup>
 
   <ItemGroup>

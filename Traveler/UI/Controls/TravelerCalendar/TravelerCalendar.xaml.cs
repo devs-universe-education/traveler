@@ -43,7 +43,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
             {
                 this.ColumnDefinitions.Add(new ColumnDefinition
                 {
-                    Width = GridLength.Star,
+                    Width = GridLength.Star
                 });
             }
         }
@@ -126,7 +126,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
             return frame;
         }
 
-        private (int num, Travel travel) NumberOfTravel(DateTime day)
+        private (int num, TravelDataObject travel) NumberOfTravel(DateTime day)
         {
             if (Travels == null)
                 return (-1, null);
@@ -141,7 +141,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
             return (-1, null);
         }
 
-        private TapGestureRecognizer BuildTapGesture(DateTime day, Travel travel)
+        private TapGestureRecognizer BuildTapGesture(DateTime day, TravelDataObject travel)
         {
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Command = DayClicked;
