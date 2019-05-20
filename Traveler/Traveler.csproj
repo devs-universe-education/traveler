@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="UI\Controls\TravelerCalendar\TravelerCalendar.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\MainTabbedPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
