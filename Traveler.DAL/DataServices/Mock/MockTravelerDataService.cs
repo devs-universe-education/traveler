@@ -41,7 +41,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult<List<EventDataObject>>> GetEventsOfCurrentDayAsync(DateTime today, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return GetMockDataList<EventDataObject>("Traveler.DAL.Resources.Mock.Main.events.json");
         }
 
         public Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx)
