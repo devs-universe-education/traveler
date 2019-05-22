@@ -21,7 +21,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new RequestResult(RequestStatus.Ok));
         }
 
         public Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx)

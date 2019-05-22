@@ -54,7 +54,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
         }
 
         public static readonly BindableProperty TravelsProperty =
-            BindableProperty.Create(nameof(Travels), typeof(IEnumerable<TravelDataObject>), typeof(TravelerCalendar), propertyChanged: OnTravelsPropertyChanged);
+            BindableProperty.Create(nameof(Travels), typeof(IEnumerable<TravelDataObject>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnTravelsPropertyChanged);
 
         private static void OnTravelsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -103,8 +103,9 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 
                 if(context.NewTravelDays == (0, 0))
                 {
-                    var (startDay, endDay) = (ValueTuple<int, int>)oldValue;
-                    context.ClearNewTravelDays(startDay, endDay);
+                    //var (startDay, endDay) = (ValueTuple<int, int>)oldValue;
+                    //context.ClearNewTravelDays(startDay, endDay);
+                    context.Redraw();
                 }
             }
         }

@@ -75,6 +75,9 @@ namespace Traveler.UI.Controls.TravelerCalendar
             this.Children.Clear();
             this.frames.Clear();
 
+            NewTravelStartDay = 0;
+            NewTravelEndDay = 0;
+
             int daysInMonth = DateTime.DaysInMonth(Year, Month);
 
             int row = 0;

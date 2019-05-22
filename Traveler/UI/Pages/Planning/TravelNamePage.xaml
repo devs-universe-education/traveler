@@ -7,7 +7,9 @@
         <StackLayout>
             <DatePicker Date="{Binding NewTravelStartDate}" />
             <DatePicker Date="{Binding NewTravelEndDate}" />
-            <Entry Placeholder="Название путешествия" />
+            <Entry Placeholder="Название путешествия" Text="{Binding TravelTitle}" />
+            <Button Text="Создать путешествие" Command="{Binding CreateTravelCommand}" />
+            <Button Text="Отмена" Command="{Binding GoBackCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

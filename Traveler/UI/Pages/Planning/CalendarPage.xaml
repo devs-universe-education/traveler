@@ -2,16 +2,31 @@
 <pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
                 xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                xmlns:controls="clr-namespace:Traveler.UI.Controls.TravelerCalendar"
+                xmlns:controls="clr-namespace:Traveler.UI.Controls"
+                xmlns:calendarControl="clr-namespace:Traveler.UI.Controls.TravelerCalendar"
                 x:Class="Traveler.UI.Pages.Planning.CalendarPage"
                 Title="CalendarPage">
     <ContentPage.Content>
-        <StackLayout>
-
-            <controls:TravelerCalendar Month="{Binding Month}" Year="{Binding Year}" NewTravelDays="{Binding NewTravelDays}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
-            <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}"/>
-            <Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>
+        <controls:StateContainer State="{Binding State}">
             
-        </StackLayout>
+            <controls:StateCondition State="Loading">
+                <ActivityIndicator IsRunning="True" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Normal">
+                <StackLayout>
+                    <calendarControl:TravelerCalendar Month="{Binding Month}" Year="{Binding Year}" NewTravelDays="{Binding NewTravelDays}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
+                    <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}"/>
+                    <!--<Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>-->
+                </StackLayout>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Error">
+                <StackLayout>
+                    <Label Text="Ошибка загрузки данных" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+            </controls:StateCondition>
+            
+        </controls:StateContainer>        
     </ContentPage.Content>
 </pages:BasePage>
