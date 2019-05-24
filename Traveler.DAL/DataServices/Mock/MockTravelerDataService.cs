@@ -31,12 +31,12 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult<DayDataObject>> GetDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return GetMockData<DayDataObject>("Traveler.DAL.Resources.Mock.Main.day.json");
         }
 
         public Task<RequestResult<List<EventDataObject>>> GetEventsOfDayAsync(int idTravel, DateTime day, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return GetMockDataList<EventDataObject>("Traveler.DAL.Resources.Mock.Main.events.json");
         }
 
         public Task<RequestResult<List<EventDataObject>>> GetEventsOfCurrentDayAsync(DateTime today, CancellationToken ctx)
@@ -46,7 +46,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new RequestResult(RequestStatus.Ok));
         }
 
         public Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)

@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Mock\Main\day.json" />
     <None Remove="Resources\Mock\Main\events.json" />
     <None Remove="Resources\Mock\Main\SampleDataObject.json" />
     <None Remove="Resources\Mock\Main\travel.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Mock\Main\day.json" />
     <EmbeddedResource Include="Resources\Mock\Main\events.json" />
     <EmbeddedResource Include="Resources\Mock\Main\SampleDataObject.json" />
     <EmbeddedResource Include="Resources\Mock\Main\travel.json" />

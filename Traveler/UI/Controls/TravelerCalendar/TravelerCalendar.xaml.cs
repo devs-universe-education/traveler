@@ -148,7 +148,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
         {
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Command = DayClicked;
-            tapGesture.CommandParameter = new Tuple<int, DateTime>(travel.Id, day);
+            tapGesture.CommandParameter = new ValueTuple<int, DateTime>(travel.Id, day);
 
             return tapGesture;
         }

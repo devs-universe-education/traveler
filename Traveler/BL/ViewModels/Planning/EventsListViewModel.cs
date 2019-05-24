@@ -1,45 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Traveler.DAL.DataObjects;
 using Traveler.DAL.DataServices;
+using Xamarin.Forms;
 
 namespace Traveler.BL.ViewModels.Planning
 {
     class EventsListViewModel : BaseViewModel
-    {        
-        public ICommand GoToEventDescriptionCommand => MakeNavigateToCommand(AppPages.EventDescription);
-        public ICommand GoToEventNameCommand => MakeNavigateToCommand(AppPages.EventName);
+    {
+        private DayDataObject eventParent;
 
-        //public DayDataObject DayObject
-        //{
-        //    get => Get<DayDataObject>();
-        //    private set => Set(value);
-        //}
+        public List<EventDataObject> Events
+        {
+            get => Get<List<EventDataObject>>();
+            private set => Set(value);
+        }
 
-        //public override async Task OnPageAppearing()
-        //{
-        //    State = PageState.Loading;
-        //    var result = await DataServices.TravelerDataService.GetEventsOfTheDayAsync(CancellationToken);
-        //    if (result.IsValid)
-        //    {
-        //        DayObject = result.Data;
-        //        State = PageState.Normal;
-        //    }
-        //    else
-        //        State = PageState.Error;
-        //}
+        public bool IsEmpty => Events.Count == 0;
+        public bool IsNotEmpty => Events.Count != 0;
 
-        //async void OnSampleCommand()
-        //{
-        //    if (NavigationParams == null)
-        //        return;
+        public ICommand GoToEventDescriptionCommand
+        {
+            get
+            {
+                return new Command(
+                    execute: (parameter) =>
+                    {
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } });
+                    });
+            }
+        }
 
-        //    object obj = NavigationParams["param"];
-        //    var param = obj as Tuple<int, DateTime>;
-        //    await ShowAlert("Параметры", $"ID: {param.Item1} Day: {param.Item2.Day}", "OK");
-        //}
-    }
+        public ICommand GoToNewEventDescriptionCommand
+        {
+            get
+            {
+                return new Command(
+                    execute: () =>
+                    {
+                        EventDataObject newEvent = new EventDataObject()
+                        {
+                            IdDay = eventParent.Id
+                        };
+
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", newEvent } });
+                    });
+            }
+        }        
+
+        public override async Task OnPageAppearing()
+        {
+            State = PageState.Loading;
+
+            object obj = NavigationParams["parameter"];
+            var (id, day) = (ValueTuple<int, DateTime>)obj;
+
+            var eventResult = await DataServices.TravelerDataService.GetEventsOfDayAsync(id, day, CancellationToken);
+            var dayResult = await DataServices.TravelerDataService.GetDayAsync(id, day, CancellationToken);
+
+            if (eventResult.IsValid && dayResult.IsValid)
+            {
+                Events = eventResult.Data;
+                eventParent = dayResult.Data;
+                State = PageState.Normal;
+            }
+            else
+            {
+                State = PageState.Error;
+            }
+        }
+    }    
 }
