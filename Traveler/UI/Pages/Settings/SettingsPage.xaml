@@ -6,9 +6,13 @@
              Title="SettingsPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Это настройки"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+
+            <Label Text="{Binding ThemeItem}"/>
+            <Picker x:Name="picker" 
+            Title="Выбрать тему" 
+            ItemsSource="{Binding ThemeList}"
+            SelectedItem="{Binding ThemeItem}"/>
+            
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>
