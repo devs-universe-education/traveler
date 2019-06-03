@@ -19,28 +19,30 @@
             </controls:StateCondition>
 
             <controls:StateCondition State="Normal">
-                <StackLayout>
-                    <ListView ItemsSource="{Binding Events}" IsVisible="{Binding IsNotEmpty}" Margin="25, 25, 25, 0">
-                        <ListView.Behaviors>
-                            <b:EventToCommandBehavior EventName="ItemTapped" Command="{Binding GoToEventDescriptionCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}"/>
-                        </ListView.Behaviors>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding Remind}" VerticalTextAlignment="Center"/>
-                                        <StackLayout Orientation="Vertical">
-                                            <Label Text="{Binding Title}"/>
-                                            <Label Text="{Binding StartTime}"/>
+                
+                    <StackLayout>
+                        <ListView ItemsSource="{Binding Events}" IsVisible="{Binding IsNotEmpty}" Margin="25, 25, 25, 0">
+                            <ListView.Behaviors>
+                                <b:EventToCommandBehavior EventName="ItemTapped" Command="{Binding GoToEventDescriptionCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}"/>
+                            </ListView.Behaviors>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding Remind}" VerticalTextAlignment="Center"/>
+                                            <StackLayout Orientation="Vertical">
+                                                <Label Text="{Binding Title}"/>
+                                                <Label Text="{Binding StartTime}"/>
+                                            </StackLayout>
                                         </StackLayout>
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <Label Text="Список событий пуст" IsVisible="{Binding IsEmpty}"/>
-                    <Button Text="+ Добавить событие" Command="{Binding GoToNewEventDescriptionCommand}"/>
-                </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Label Text="Список событий пуст" IsVisible="{Binding IsEmpty}"/>
+                        <Button Text="+ Добавить событие" Command="{Binding GoToNewEventDescriptionCommand}" TextColor="#2196F3" BackgroundColor="#00000000"/>
+                    </StackLayout>
+                
             </controls:StateCondition>
 
             <controls:StateCondition State="Error">
