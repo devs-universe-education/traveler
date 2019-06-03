@@ -34,11 +34,11 @@ namespace Traveler.DAL.DataServices.Database
             }
         }
 
-        public async Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx)
+        public async Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime date, CancellationToken ctx)
         {
             try
             {
-                DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
+                DateTime firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
                 DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
                 var list = await database.QueryAsync<TravelDataObject>("SELECT * FROM [Travels]" +

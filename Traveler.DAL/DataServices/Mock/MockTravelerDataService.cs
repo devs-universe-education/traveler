@@ -14,9 +14,9 @@ namespace Traveler.DAL.DataServices.Mock
             throw new NotImplementedException();
         }
 
-        public Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx)
+        public Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime date, CancellationToken ctx)
         {
-            return GetMockDataList<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travel.json");
+            return GetMockDataList<TravelDataObject>("Traveler.DAL.Resources.Mock.Main.travels.json");
         }
 
         public Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx)

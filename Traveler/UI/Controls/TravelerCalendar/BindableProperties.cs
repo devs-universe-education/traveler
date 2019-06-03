@@ -9,43 +9,62 @@ namespace Traveler.UI.Controls.TravelerCalendar
 {
     partial class TravelerCalendar : Grid
     {
-        public int Year
+        public DateTime Date
         {
-            get => (int)GetValue(YearProperty);
-            set => SetValue(YearProperty, value);
+            get => (DateTime)GetValue(DateProperty);
+            set => SetValue(DateProperty, value);
         }
 
-        public static readonly BindableProperty YearProperty =
-            BindableProperty.Create(nameof(Year), typeof(int), typeof(TravelerCalendar), propertyChanged: OnYearPropertyChanged);
+        public static readonly BindableProperty DateProperty =
+            BindableProperty.Create(nameof(Date), typeof(DateTime), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnDatePropertyChanged);
 
-        private static void OnYearPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var context = (TravelerCalendar)bindable;
-            if (context != null)
-            {
-                context.Year = (int)newValue;
-                context.Redraw();
-            }
-        }
-
-        public int Month
-        {
-            get => (int)GetValue(MonthProperty);
-            set => SetValue(MonthProperty, value);
-        }
-
-        public static readonly BindableProperty MonthProperty =
-            BindableProperty.Create(nameof(Month), typeof(int), typeof(TravelerCalendar), propertyChanged: OnMonthPropertyChanged);
-
-        private static void OnMonthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnDatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var context = (TravelerCalendar)bindable;
             if (context != null)
             {
-                context.Month = (int)newValue;
+                context.Date = (DateTime)newValue;
                 context.Redraw();
             }
         }
+
+        //public int Year
+        //{
+        //    get => (int)GetValue(YearProperty);
+        //    set => SetValue(YearProperty, value);
+        //}
+
+        //public static readonly BindableProperty YearProperty =
+        //    BindableProperty.Create(nameof(Year), typeof(int), typeof(TravelerCalendar), propertyChanged: OnYearPropertyChanged);
+
+        //private static void OnYearPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        //{
+        //    var context = (TravelerCalendar)bindable;
+        //    if (context != null)
+        //    {
+        //        context.Year = (int)newValue;
+        //        context.Redraw();
+        //    }
+        //}
+
+        //public int Month
+        //{
+        //    get => (int)GetValue(MonthProperty);
+        //    set => SetValue(MonthProperty, value);
+        //}
+
+        //public static readonly BindableProperty MonthProperty =
+        //    BindableProperty.Create(nameof(Month), typeof(int), typeof(TravelerCalendar), propertyChanged: OnMonthPropertyChanged);
+
+        //private static void OnMonthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        //{
+        //    var context = (TravelerCalendar)bindable;
+        //    if (context != null)
+        //    {
+        //        context.Month = (int)newValue;
+        //        context.Redraw();
+        //    }
+        //}
 
         public IEnumerable<TravelDataObject> Travels
         {

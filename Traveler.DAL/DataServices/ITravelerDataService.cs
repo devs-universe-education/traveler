@@ -10,7 +10,7 @@ namespace Traveler.DAL.DataServices
     public interface ITravelerDataService
     {
         Task<RequestResult<List<TravelDataObject>>> GetTravelsAsync(CancellationToken ctx);
-        Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime today, CancellationToken ctx);
+        Task<RequestResult<List<TravelDataObject>>> GetTravelsOfMonthAsync(DateTime date, CancellationToken ctx);
         Task<RequestResult> SaveTravelAsync(TravelDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteTravelAsync(TravelDataObject item, CancellationToken ctx);
 

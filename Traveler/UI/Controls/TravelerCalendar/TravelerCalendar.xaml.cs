@@ -51,10 +51,10 @@ namespace Traveler.UI.Controls.TravelerCalendar
         private void InitializeColors()
         {
             var colors = new[] { Color.Aquamarine, Color.Blue, Color.Chocolate, Color.Crimson, Color.DarkCyan, Color.DarkGreen,
-                Color.DeepPink, Color.Fuchsia, Color.GreenYellow, Color.Red, Color.Purple, Color.Orange,
-                Color.Violet, Color.Lime, Color.Magenta, Color.Yellow, Color.DarkOrange, Color.Brown,
-                Color.DarkSalmon, Color.Lavender, Color.MediumVioletRed, Color.PaleGreen, Color.PapayaWhip, Color.Plum,
-                Color.SandyBrown, Color.Sienna, Color.Tan, Color.Turquoise, Color.OldLace, Color.MistyRose, Color.Ivory };
+                Color.DeepPink, Color.DarkSlateGray, Color.GreenYellow, Color.Red, Color.Purple, Color.Orange,
+                Color.Violet, Color.Lime, Color.Magenta, Color.Olive, Color.MediumSlateBlue, Color.Brown,
+                Color.DarkSalmon, Color.PaleVioletRed, Color.MediumVioletRed, Color.PaleGreen, Color.Peru, Color.Plum,
+                Color.SandyBrown, Color.Sienna, Color.Teal, Color.Turquoise, Color.SeaGreen, Color.Maroon, Color.Indigo };
 
             travelColors = new Dictionary<int, Color>();
 
@@ -69,8 +69,8 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
         private void Redraw()
         {
-            if (Year <= 0 || Month <= 0)
-                return;
+            //if (Year <= 0 || Month <= 0)
+            //    return;
 
             this.Children.Clear();
             this.frames.Clear();
@@ -78,12 +78,12 @@ namespace Traveler.UI.Controls.TravelerCalendar
             NewTravelStartDay = 0;
             NewTravelEndDay = 0;
 
-            int daysInMonth = DateTime.DaysInMonth(Year, Month);
+            int daysInMonth = DateTime.DaysInMonth(Date.Year, Date.Month);
 
             int row = 0;
             for (int day = 0; day < daysInMonth; day++)
             {
-                var date = new DateTime(Year, Month, day + 1);
+                var date = new DateTime(Date.Year, Date.Month, day + 1);
                 var view = CreateView(date);                
 
                 if (day > 0 && date.DayOfWeek == DayOfWeek.Monday)
@@ -102,34 +102,34 @@ namespace Traveler.UI.Controls.TravelerCalendar
             return day == 0 ? 6 : day - 1;
         }
 
-        private View CreateView(DateTime day)
+        private View CreateView(DateTime date)
         {
-            var (num, travel) = NumberOfTravel(day);
+            var (num, travel) = NumberOfTravel(date);
             Color color = num == -1 ? Color.Transparent : travelColors[num];
 
             Frame frame = new Frame()
             {
-                BindingContext = day.Day,
+                BindingContext = date.Day,
                 
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BorderColor = Color.Gray,
                 BackgroundColor = color,
-                Content = new Label() { Text = day.Day.ToString(), TextColor = Color.Black },
+                Content = new Label() { Text = date.Day.ToString(), TextColor = Color.Black },
                 Padding = 1
             };
 
-            frames.Add(day.Day, frame);
+            frames.Add(date.Day, frame);
 
             if(travel != null)
-                frame.GestureRecognizers.Add(BuildTapGesture(day, travel));
+                frame.GestureRecognizers.Add(BuildTapGesture(date, travel));
             else
                 frame.GestureRecognizers.Add(BuildTapGesture());
             
             return frame;
         }
 
-        private (int num, TravelDataObject travel) NumberOfTravel(DateTime day)
+        private (int num, TravelDataObject travel) NumberOfTravel(DateTime date)
         {
             if (Travels == null)
                 return (-1, null);
@@ -137,7 +137,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
             for (int i = 0; i < Travels.Count(); i++)
             {
                 var travel = Travels.ElementAt(i);
-                if (day.Day >= travel.StartDate.Day && day.Day <= travel.EndDate.Day)
+                if (date >= travel.StartDate && date <= travel.EndDate)
                     return (i, travel);
             }
 
