@@ -12,32 +12,42 @@
             </controls:StateCondition>
 
             <controls:StateCondition State="Normal">
-                <StackLayout>
-                    <Entry Text="{Binding Event.Title}" Placeholder="Название события"/>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Grid.Row="0" Text="Дата начала:"/>
-                        <Label Grid.Column="1" Grid.Row="0" Text="Дата окончания:"/>
-                        <TimePicker Time="{Binding StartTime}" Grid.Column="0" Grid.Row="1" Format="HH:mm" />
-                        <TimePicker Time="{Binding EndTime}" Grid.Column="1" Grid.Row="1" Format="HH:mm"/>
-                    </Grid>
-                    <Entry Text="{Binding Event.Address}" Placeholder="Адрес"/>
-                    <Entry Text="{Binding Event.Comment}" Placeholder="Комментарий"/>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="Напомнить"/>
-                        <Switch IsToggled="{Binding Event.Remind}"/>
+                <ScrollView>
+                    <StackLayout>
+                        <Entry Text="{Binding Event.Title}" Placeholder="Название события"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Text="Дата начала:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Text="Дата окончания:"/>
+                            <TimePicker Time="{Binding StartTime}" Grid.Column="0" Grid.Row="1" Format="HH:mm" />
+                            <TimePicker Time="{Binding EndTime}" Grid.Column="1" Grid.Row="1" Format="HH:mm"/>
+                        </Grid>
+                        <Entry Text="{Binding Event.Address}" Placeholder="Адрес"/>
+                        <Entry Text="{Binding Event.Comment}" Placeholder="Комментарий"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Напомнить"/>
+                            <Switch IsToggled="{Binding Event.Remind}"/>
+                        </StackLayout>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1" Grid.Row="0" Text="Сохранить" Command="{Binding SaveEventCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+                            <Button Grid.Column="0" Grid.Row="0" Text="Отмена" Command="{Binding GoBackCommand}" BackgroundColor="#00FFFFFF" TextColor="#FF4081"/>
+                        </Grid>
                     </StackLayout>
-
-                    <Button Text="Сохранить" Command="{Binding SaveEventCommand}"/>
-                    <Button Text="Отмена" Command="{Binding GoBackCommand}"/>
-                </StackLayout>
+                </ScrollView>
             </controls:StateCondition>
 
             <controls:StateCondition State="Error">
