@@ -16,9 +16,8 @@
             <controls:StateCondition State="Normal">
                 <StackLayout>
                     <DatePicker Date="{Binding Date}" Format="MMMM, yyyy" />
-                    <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDays="{Binding NewTravelDays}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
+                    <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDates="{Binding NewTravelDates}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
                     <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3" Visual="Material"/>
-                    <!--<Button Text="(путешествие создано) События выбранного дня" Command="{Binding GoToEventsListCommand}"/>-->
                 </StackLayout>
             </controls:StateCondition>
 
