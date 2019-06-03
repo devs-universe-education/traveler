@@ -29,7 +29,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <Label Text="События на сегодня не запланированы" IsVisible="{Binding IsEmpty}" VerticalOptions="CenterAndExpand"/>                    
+                    <Label Text="События на сегодня не запланированы" IsVisible="{Binding IsEmpty}" VerticalOptions="CenterAndExpand" Style="{DynamicResource TitleStyle}"/>                    
                 </StackLayout>
             </controls:StateCondition>
 
