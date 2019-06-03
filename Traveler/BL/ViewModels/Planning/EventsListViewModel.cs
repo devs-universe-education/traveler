@@ -17,11 +17,24 @@ namespace Traveler.BL.ViewModels.Planning
         public List<EventDataObject> Events
         {
             get => Get<List<EventDataObject>>();
-            private set => Set(value);
+            private set
+            {
+                Set(value);
+                IsEmpty = value.Count == 0;
+                IsNotEmpty = value.Count != 0;
+            }
         }
 
-        public bool IsEmpty => Events.Count == 0;
-        public bool IsNotEmpty => Events.Count != 0;
+        public bool IsEmpty
+        {
+            get => Get<bool>();
+            private set => Set(value);
+        }
+        public bool IsNotEmpty
+        {
+            get => Get<bool>();
+            private set => Set(value);
+        }
 
         public ICommand GoToEventDescriptionCommand
         {

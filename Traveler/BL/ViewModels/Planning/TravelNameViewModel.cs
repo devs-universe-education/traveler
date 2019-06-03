@@ -34,16 +34,16 @@ namespace Traveler.BL.ViewModels.Planning
             get
             {
                 return new Command(
-                    execute: () =>
+                    execute: async () =>
                     {
                         TravelDataObject travel = new TravelDataObject()
                         {
                             Title = TravelTitle,
                             StartDate = NewTravelStartDate,
-                            EndDate = NewTravelEndDate.Year == 1900 ? NewTravelStartDate : NewTravelEndDate
+                            EndDate = NewTravelEndDate
                         };
 
-                        DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
+                        await DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
                         NavigateBack();
                     });
             }
@@ -51,12 +51,10 @@ namespace Traveler.BL.ViewModels.Planning
 
         public override async Task OnPageAppearing()
         {
-            var year = (int)(NavigationParams["Year"]);
-            var month = (int)(NavigationParams["Month"]);
-            var (startDay, endDay) = (ValueTuple<int, int>)(NavigationParams["Days"]);
+            var (startDate, endDate) = (ValueTuple<DateTime, DateTime>)(NavigationParams["Dates"]);
 
-            NewTravelStartDate = new DateTime(year, month, startDay);
-            NewTravelEndDate = new DateTime(year, month, endDay);
+            NewTravelStartDate = startDate;
+            NewTravelEndDate = endDate == default(DateTime) ? startDate : endDate;
         }        
     }
 }

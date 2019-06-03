@@ -24,47 +24,9 @@ namespace Traveler.UI.Controls.TravelerCalendar
             if (context != null)
             {
                 context.Date = (DateTime)newValue;
-                context.Redraw();
+                context.Redraw(clearSelection: false);
             }
         }
-
-        //public int Year
-        //{
-        //    get => (int)GetValue(YearProperty);
-        //    set => SetValue(YearProperty, value);
-        //}
-
-        //public static readonly BindableProperty YearProperty =
-        //    BindableProperty.Create(nameof(Year), typeof(int), typeof(TravelerCalendar), propertyChanged: OnYearPropertyChanged);
-
-        //private static void OnYearPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        //{
-        //    var context = (TravelerCalendar)bindable;
-        //    if (context != null)
-        //    {
-        //        context.Year = (int)newValue;
-        //        context.Redraw();
-        //    }
-        //}
-
-        //public int Month
-        //{
-        //    get => (int)GetValue(MonthProperty);
-        //    set => SetValue(MonthProperty, value);
-        //}
-
-        //public static readonly BindableProperty MonthProperty =
-        //    BindableProperty.Create(nameof(Month), typeof(int), typeof(TravelerCalendar), propertyChanged: OnMonthPropertyChanged);
-
-        //private static void OnMonthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        //{
-        //    var context = (TravelerCalendar)bindable;
-        //    if (context != null)
-        //    {
-        //        context.Month = (int)newValue;
-        //        context.Redraw();
-        //    }
-        //}
 
         public IEnumerable<TravelDataObject> Travels
         {
@@ -81,7 +43,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
             if (context != null)
             {
                 context.Travels = (IEnumerable<TravelDataObject>)newValue;
-                context.Redraw();
+                context.Redraw(clearSelection: false);
             }
         }
 
@@ -100,31 +62,29 @@ namespace Traveler.UI.Controls.TravelerCalendar
             if (context != null)
             {
                 context.DayClicked = (ICommand)newValue;
-                context.Redraw();
+                context.Redraw(clearSelection: false);
             }
         }
 
-        public ValueTuple<int, int> NewTravelDays
+        public ValueTuple<DateTime, DateTime> NewTravelDates
         {
-            get => (ValueTuple<int, int>)GetValue(NewTravelDaysProperty);
-            set => SetValue(NewTravelDaysProperty, value);
+            get => (ValueTuple<DateTime, DateTime>)GetValue(NewTravelDatesProperty);
+            set => SetValue(NewTravelDatesProperty, value);
         }
 
-        public static readonly BindableProperty NewTravelDaysProperty =
-            BindableProperty.Create(nameof(NewTravelDays), typeof(ValueTuple<int, int>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnNewTravelDaysPropertyChanged);
+        public static readonly BindableProperty NewTravelDatesProperty =
+            BindableProperty.Create(nameof(NewTravelDates), typeof(ValueTuple<DateTime, DateTime>), typeof(TravelerCalendar), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnNewTravelDatesPropertyChanged);
 
-        private static void OnNewTravelDaysPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnNewTravelDatesPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var context = (TravelerCalendar)bindable;
             if (context != null)
             {
-                context.NewTravelDays = (ValueTuple<int, int>)newValue;
-                
-                if(context.NewTravelDays == (0, 0))
+                context.NewTravelDates = (ValueTuple<DateTime, DateTime>)newValue;
+
+                if (context.NewTravelDates.Item1 == default(DateTime))
                 {
-                    //var (startDay, endDay) = (ValueTuple<int, int>)oldValue;
-                    //context.ClearNewTravelDays(startDay, endDay);
-                    context.Redraw();
+                    context.Redraw(clearSelection: true);
                 }
             }
         }

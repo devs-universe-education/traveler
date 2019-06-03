@@ -14,16 +14,18 @@ namespace Traveler.UI.Controls.TravelerCalendar
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TravelerCalendar : Grid
     {
-        public int NewTravelStartDay { get; private set; }
-        public int NewTravelEndDay { get; private set; }
+        public DateTime NewTravelStartDate { get; private set; }
+        public DateTime NewTravelEndDate { get; private set; }
+        public bool NewTravelStartDay { get; private set; }
+        public bool NewTravelEndDay { get; private set; }
 
         private Dictionary<int, Color> travelColors;
-        private Dictionary<int, Frame> frames;
+        private List<Frame> frames;
 
         public TravelerCalendar()
         {
             InitializeColors();
-            frames = new Dictionary<int, Frame>();
+            frames = new List<Frame>(31);
 
             this.HorizontalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
             this.VerticalOptions = new LayoutOptions(LayoutAlignment.Fill, true);
@@ -67,16 +69,10 @@ namespace Traveler.UI.Controls.TravelerCalendar
             }
         }
 
-        private void Redraw()
+        private void Redraw(bool clearSelection)
         {
-            //if (Year <= 0 || Month <= 0)
-            //    return;
-
             this.Children.Clear();
             this.frames.Clear();
-
-            NewTravelStartDay = 0;
-            NewTravelEndDay = 0;
 
             int daysInMonth = DateTime.DaysInMonth(Date.Year, Date.Month);
 
@@ -94,6 +90,11 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 var column = GetDayOfWeek(date);
                 this.Children.Add(view, column, row);
             }
+
+            if (clearSelection)
+                ClearNewTravelSelection();
+
+            PaintNewTravelDays();            
         }
 
         private int GetDayOfWeek(DateTime date)
@@ -109,7 +110,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
 
             Frame frame = new Frame()
             {
-                BindingContext = date.Day,
+                BindingContext = date,
                 
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -119,7 +120,7 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 Padding = 1
             };
 
-            frames.Add(date.Day, frame);
+            frames.Add(frame);
 
             if(travel != null)
                 frame.GestureRecognizers.Add(BuildTapGesture(date, travel));
@@ -144,11 +145,11 @@ namespace Traveler.UI.Controls.TravelerCalendar
             return (-1, null);
         }
 
-        private TapGestureRecognizer BuildTapGesture(DateTime day, TravelDataObject travel)
+        private TapGestureRecognizer BuildTapGesture(DateTime date, TravelDataObject travel)
         {
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Command = DayClicked;
-            tapGesture.CommandParameter = new ValueTuple<int, DateTime>(travel.Id, day);
+            tapGesture.CommandParameter = new ValueTuple<int, DateTime>(travel.Id, date);
 
             return tapGesture;
         }
@@ -163,69 +164,71 @@ namespace Traveler.UI.Controls.TravelerCalendar
         private void CalendarDay_Tapped(object sender, EventArgs e)
         {
             var frame = sender as Frame;
-            int frameDay = (int)frame.BindingContext;
+            DateTime frameDate = (DateTime)frame.BindingContext;
 
-            if (NewTravelStartDay == 0)
+            if (!NewTravelStartDay)
             {
-                NewTravelStartDay = frameDay;
-                frame.BorderColor = Color.Yellow;
-                frame.BackgroundColor = Color.Yellow;
+                NewTravelStartDay = true;
+                NewTravelStartDate = frameDate;
+                //frame.BorderColor = Color.Yellow;
+                //frame.BackgroundColor = Color.Yellow;
             }
-            else if (NewTravelEndDay == 0)
+            else if (!NewTravelEndDay)
             {
-                if (frameDay < NewTravelStartDay)
+                if (frameDate < NewTravelStartDate)
                 {
-                    var oldFrame = frames[NewTravelStartDay];
-                    NewTravelEndDay = (int)oldFrame.BindingContext;
-                    NewTravelStartDay = frameDay;
+                    NewTravelEndDay = true;
+                    NewTravelEndDate = NewTravelStartDate;
+                    NewTravelStartDate = frameDate;
                 }
-                else if (NewTravelStartDay < frameDay)
+                else if (NewTravelStartDate < frameDate)
                 {
-                    NewTravelEndDay = frameDay;
+                    NewTravelEndDate = frameDate;
                 }
             }
-            else if (frameDay != NewTravelStartDay && frameDay != NewTravelEndDay)
+            else if (frameDate != NewTravelStartDate && frameDate != NewTravelEndDate)
             {
-                if (frameDay < NewTravelStartDay)
-                    NewTravelStartDay = frameDay;
-                else if (NewTravelEndDay < frameDay)
-                    NewTravelEndDay = frameDay;
+                if (frameDate < NewTravelStartDate)
+                {
+                    NewTravelStartDate = frameDate;
+                }
+                else if (NewTravelEndDate < frameDate)
+                {
+                    NewTravelEndDate = frameDate;
+                }
             }
 
             PaintNewTravelDays();
-            NewTravelDays = (NewTravelStartDay, NewTravelEndDay);
+            NewTravelDates = (NewTravelStartDate, NewTravelEndDate);            
         }
 
         private void PaintNewTravelDays()
         {
-            for (int i = NewTravelStartDay; i <= NewTravelEndDay; i++)
+            for (int i = 0; i < frames.Count; i++)
             {
-                var paintFrame = frames[i];
-                paintFrame.BorderColor = Color.Yellow;
-                paintFrame.BackgroundColor = Color.Yellow;
+                var frame = frames[i];
+                var frameDate = (DateTime)frame.BindingContext;
+
+                if (NewTravelStartDate <= frameDate && frameDate <= NewTravelEndDate)
+                {
+                    frame.BorderColor = Color.Yellow;
+                    frame.BackgroundColor = Color.Yellow;
+                }
+                else if (NewTravelStartDate == frameDate && NewTravelEndDay == false)
+                {
+                    frame.BorderColor = Color.Yellow;
+                    frame.BackgroundColor = Color.Yellow;
+                    return;
+                }
             }
         }
 
-        public void ClearNewTravelDays(int startDay, int endDay)
+        public void ClearNewTravelSelection()
         {
-            if (endDay == 0)
-            {
-                var paintFrame = frames[startDay];
-                paintFrame.BorderColor = Color.Gray;
-                paintFrame.BackgroundColor = Color.Transparent;
-            }
-            else
-            {
-                for (int i = startDay; i <= endDay; i++)
-                {
-                    var paintFrame = frames[i];
-                    paintFrame.BorderColor = Color.Gray;
-                    paintFrame.BackgroundColor = Color.Transparent;
-                }
-            }
-
-            NewTravelStartDay = 0;
-            NewTravelEndDay = 0;
+            NewTravelStartDay = false;
+            NewTravelEndDay = false;            
+            NewTravelStartDate = default(DateTime);
+            NewTravelEndDate = default(DateTime);
         }
     }
 }

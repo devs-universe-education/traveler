@@ -14,15 +14,16 @@ namespace Traveler.BL.ViewModels.Planning
         public DateTime Date
         {
             get => Get<DateTime>();
-            set => Set(value);
+            set
+            {
+                Set(value);
+                GetData();
+            }
         }
 
-        public int Year => DateTime.Now.Year;
-        public int Month => DateTime.Now.Month;
-
-        public (int startDay, int endDay) NewTravelDays
+        public (DateTime startDate, DateTime endDate) NewTravelDates
         {
-            get => Get<(int, int)>();
+            get => Get<(DateTime, DateTime)>();
             set => Set(value);
         }
 
@@ -39,12 +40,7 @@ namespace Traveler.BL.ViewModels.Planning
                 return new Command(
                     execute: () =>
                     {
-                        NavigateTo(AppPages.TravelName, null, dataToLoad: new Dictionary<string, object>()
-                        {
-                            { "Year", Year },
-                            { "Month", Month },
-                            { "Days", NewTravelDays }
-                        });
+                        NavigateTo(AppPages.TravelName, null, dataToLoad: new Dictionary<string, object>() { { "Dates", NewTravelDates } });
                     });
             }
         }
@@ -62,7 +58,13 @@ namespace Traveler.BL.ViewModels.Planning
         }
 
         public override async Task OnPageAppearing()
-        {  
+        {
+            NewTravelDates = default((DateTime, DateTime));
+            GetData();
+        }
+
+        private async Task GetData()
+        {
             State = PageState.Loading;
             var result = await DataServices.TravelerDataService.GetTravelsOfMonthAsync(Date, CancellationToken);
             if (result.IsValid)
@@ -74,8 +76,6 @@ namespace Traveler.BL.ViewModels.Planning
             {
                 State = PageState.Error;
             }
-
-            NewTravelDays = (0, 0);
         }
 
         public CalendarViewModel() : base()

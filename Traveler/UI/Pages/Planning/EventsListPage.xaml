@@ -4,7 +4,8 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 xmlns:controls="clr-namespace:Traveler.UI.Controls"
                 xmlns:b="clr-namespace:Traveler.Helpers.EventToCommandBehavior"
-                x:Class="Traveler.UI.Pages.Planning.EventsListPage">
+                x:Class="Traveler.UI.Pages.Planning.EventsListPage"
+                Title="Список событий">
     <ContentPage.Resources>
         <ResourceDictionary>
             <b:ItemTappedEventArgsConverter x:Key="ItemTappedConverter"/>
