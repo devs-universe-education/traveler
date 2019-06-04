@@ -19,17 +19,17 @@ namespace Traveler.Android
         public override void OnReceive(Context context, Intent intent)
         {
 
-          //  NotificationChannel notificationChannel = new NotificationChannel("myChannel", "name", NotificationImportance.High);
+           // NotificationChannel notificationChannel = new NotificationChannel("myChannel", "name", NotificationImportance.High);
 
             NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
-          //  notificationManager.CreateNotificationChannel(notificationChannel);
+           // notificationManager.CreateNotificationChannel(notificationChannel);
 
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "mychannel");
+            Notification.Builder builder = new Notification.Builder(context);
             builder.SetContentTitle("NOTIFICATION")
                    .SetContentText("aboit notification")
                    .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg);
-                 //  .SetChannelId("myChannel");
+             //      .SetChannelId("myChannel");
 
             Notification notification = builder.Build();
 

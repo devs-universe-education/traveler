@@ -39,6 +39,7 @@ namespace Traveler.BL.ViewModels.Planning
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
                         await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
+                        DependencyService.Get<INotificationCreate>().CreateNotification();
                         await NavigateBack();
                     });
             }

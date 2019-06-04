@@ -12,7 +12,7 @@ namespace Traveler
 		{
 			DialogService.Init(this);
 			NavigationService.InitTabbed(InitializePages());
-			DataServices.Init(true, DependencyService.Get<IDatabaseConnection>().GetConnectionString());
+			DataServices.Init(false, DependencyService.Get<IDatabaseConnection>().GetConnectionString());
 		}
 
         protected override void OnStart()

@@ -23,13 +23,13 @@ namespace Traveler.Android
         
         public CreateNotificationAndroid()
         {
-            alarmManager = (AlarmManager)Application.Context.GetSystemService(Context.AlarmService);            
+            alarmManager = (AlarmManager)Application.Context.GetSystemService(Context.AlarmService);
+            myIntent = new Intent(Application.Context, typeof(AlarmNotificationReceiver));
+            pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, myIntent, PendingIntentFlags.UpdateCurrent);
         }
 
         public void CreateNotification()
         {
-            myIntent = new Intent(Application.Context, typeof(AlarmNotificationReceiver));
-            pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, myIntent, PendingIntentFlags.UpdateCurrent);
             alarmManager.Set(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + 3000, pendingIntent);
         }
     }
