@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmNotificationReceiver.cs" />
+    <Compile Include="CreateNotificationAndroid.cs" />
     <Compile Include="DatabaseConnectionAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

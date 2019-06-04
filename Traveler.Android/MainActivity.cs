@@ -21,15 +21,6 @@ namespace Traveler.Android
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
-
-            AlarmManager manager = (AlarmManager)GetSystemService(Context.AlarmService);
-            Intent myIntent;
-            PendingIntent pendingIntent;
-
-
-            myIntent = new Intent(this, typeof(AlarmNotificationReceiver));
-            pendingIntent = PendingIntent.GetBroadcast(this, 0, myIntent, PendingIntentFlags.UpdateCurrent);
-            manager.Set(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + 3000, pendingIntent);
         }
     }
 }
