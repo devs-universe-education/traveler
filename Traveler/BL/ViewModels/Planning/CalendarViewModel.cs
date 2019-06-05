@@ -50,9 +50,33 @@ namespace Traveler.BL.ViewModels.Planning
             get
             {
                 return new Command(
-                    execute: (parameter) =>
+                    execute: async (parameter) =>
                     {
-                        NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } });
+                        string toEventsList = "Перейти к событиям";
+                        string deleteTravel = "Удалить путешествие";
+                        string selectedItem = await ShowSheet("Выберите действие", "Отмена", "", new[] { toEventsList, deleteTravel });
+
+                        if (selectedItem == toEventsList)
+                        {
+                            NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } });
+                        }
+                        else if(selectedItem == deleteTravel)
+                        {
+                            var (travelId, day) = (ValueTuple<int, DateTime>)parameter;
+                            TravelDataObject travel = new TravelDataObject() { Id = travelId };
+
+                            var result = await DataServices.TravelerDataService.DeleteTravelAsync(travel, CancellationToken);
+
+                            if(result.Status == DAL.RequestStatus.Ok)
+                            {
+                                GetData();
+                                ShowAlert("", "Путешествие удалено", "OK");                                
+                            }
+                            else
+                            {
+                                ShowAlert("", "Ошибка при удалении", "OK");
+                            }
+                        }
                     });
             }
         }
