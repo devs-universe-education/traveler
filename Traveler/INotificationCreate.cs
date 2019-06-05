@@ -6,6 +6,6 @@ namespace Traveler
 {
     public interface INotificationCreate
     {
-        void CreateNotification();
+        void CreateNotification(int eventStartTimeHours, int eventStartTimeMinutes);
     }
 }

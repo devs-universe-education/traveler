@@ -16,24 +16,27 @@ namespace Traveler.Android
     [BroadcastReceiver]
     class AlarmNotificationReceiver : BroadcastReceiver
     {
+        static readonly int NOTIFICATION_ID = 101010;
+        static readonly string CHANNEL_ID = "location_notification";
+        static readonly string CHANNEL_NAME = "name";
+
         public override void OnReceive(Context context, Intent intent)
         {
 
-           // NotificationChannel notificationChannel = new NotificationChannel("myChannel", "name", NotificationImportance.High);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationImportance.High);
 
             NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
-           // notificationManager.CreateNotificationChannel(notificationChannel);
+            notificationManager.CreateNotificationChannel(notificationChannel);
 
 
-            Notification.Builder builder = new Notification.Builder(context);
-            builder.SetContentTitle("NOTIFICATION")
-                   .SetContentText("aboit notification")
-                   .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg);
-             //      .SetChannelId("myChannel");
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+            builder.SetContentTitle("Traveler")
+                   .SetContentText("До ближайшего события осталось 30 минут!")
+                   .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg)
+                   .SetChannelId(CHANNEL_ID);
 
             Notification notification = builder.Build();
-
-            notificationManager.Notify(12, notification);
+            notificationManager.Notify(NOTIFICATION_ID, notification);
         }
     }
 }
