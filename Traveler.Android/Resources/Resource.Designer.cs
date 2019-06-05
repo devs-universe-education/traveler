@@ -6178,6 +6178,12 @@ namespace Traveler.Android
 			// aapt resource value: 0x7f090034
 			public const int bottom_sheet_behavior = 2131296308;
 			
+			// aapt resource value: 0x7f09003e
+			public const int channel_id = 2131296318;
+			
+			// aapt resource value: 0x7f09003d
+			public const int channel_name = 2131296317;
+			
 			// aapt resource value: 0x7f090035
 			public const int character_counter_pattern = 2131296309;
 			

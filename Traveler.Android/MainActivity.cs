@@ -21,7 +21,27 @@ namespace Traveler.Android
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
+
+            CreateNotificationChannel();
         }
+        void CreateNotificationChannel()
+        {
+            if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+            {
+                // Notification channels are new in API 26 (and not a part of the
+                // support library). There is no need to create a notification
+                // channel on older versions of Android.
+                return;
+            }
+
+            var name = Resources.GetString(Resource.String.channel_name);
+            var id = GetString(Resource.String.channel_id);
+            var channel = new NotificationChannel(id, name, NotificationImportance.Default);
+
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            notificationManager.CreateNotificationChannel(channel);
+        }
+
     }
 }
 

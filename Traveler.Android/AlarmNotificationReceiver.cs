@@ -17,36 +17,20 @@ namespace Traveler.Android
     class AlarmNotificationReceiver : BroadcastReceiver
     {
         static readonly int NOTIFICATION_ID = 101010;
-        static readonly string CHANNEL_ID = "location_notification";
-        static readonly string CHANNEL_NAME = "name";
-
+        static readonly string CHANNEL_ID = "channelId";
         public override void OnReceive(Context context, Intent intent)
         {
-            NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
-            Notification notification;
-
-            if (Build.VERSION.SdkInt < BuildVersionCodes.O)
-            {                             
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                builder.SetContentTitle("Traveler")
-                       .SetContentText("До ближайшего события осталось 30 минут!")
-                       .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg);
-                notification = builder.Build();
-            }
-            else
-            {
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationImportance.High);
-              
-                notificationManager.CreateNotificationChannel(notificationChannel);
-
+           Notification notification;
+                      
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                builder.SetContentTitle("Traveler")
+                builder.SetAutoCancel(true)
+                       .SetContentTitle("Напоминание")
                        .SetContentText("До ближайшего события осталось 30 минут!")
-                       .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg)
+                       .SetSmallIcon(Resource.Drawable.icon)
                        .SetChannelId(CHANNEL_ID);
                 notification = builder.Build();
 
-            }            
+            var notificationManager = NotificationManagerCompat.From(context);
             notificationManager.Notify(NOTIFICATION_ID, notification);
         }
     }
