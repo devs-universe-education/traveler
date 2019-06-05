@@ -22,20 +22,31 @@ namespace Traveler.Android
 
         public override void OnReceive(Context context, Intent intent)
         {
-
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationImportance.High);
-
             NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
-            notificationManager.CreateNotificationChannel(notificationChannel);
+            Notification notification;
 
+            if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+            {                             
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                builder.SetContentTitle("Traveler")
+                       .SetContentText("До ближайшего события осталось 30 минут!")
+                       .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg);
+                notification = builder.Build();
+            }
+            else
+            {
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationImportance.High);
+              
+                notificationManager.CreateNotificationChannel(notificationChannel);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-            builder.SetContentTitle("Traveler")
-                   .SetContentText("До ближайшего события осталось 30 минут!")
-                   .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg)
-                   .SetChannelId(CHANNEL_ID);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                builder.SetContentTitle("Traveler")
+                       .SetContentText("До ближайшего события осталось 30 минут!")
+                       .SetSmallIcon(Resource.Drawable.notification_template_icon_low_bg)
+                       .SetChannelId(CHANNEL_ID);
+                notification = builder.Build();
 
-            Notification notification = builder.Build();
+            }            
             notificationManager.Notify(NOTIFICATION_ID, notification);
         }
     }
