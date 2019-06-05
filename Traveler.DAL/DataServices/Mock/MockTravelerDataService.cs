@@ -51,7 +51,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new RequestResult(RequestStatus.Ok));
         }
     }
 }

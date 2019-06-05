@@ -86,19 +86,22 @@ namespace Traveler.BL.ViewModels.Planning
                         }
                         else if(selectedItem == deleteTravel)
                         {
-                            var (travelId, day) = (ValueTuple<int, DateTime>)parameter;
-                            TravelDataObject travel = new TravelDataObject() { Id = travelId };
-
-                            var result = await DataServices.TravelerDataService.DeleteTravelAsync(travel, CancellationToken);
-
-                            if(result.Status == DAL.RequestStatus.Ok)
+                            bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить путешествие?", "Да", "Нет");
+                            if (questionResult)
                             {
-                                GetData();
-                                ShowAlert("", "Путешествие удалено", "OK");                                
-                            }
-                            else
-                            {
-                                ShowAlert("", "Ошибка при удалении", "OK");
+                                var (travelId, day) = (ValueTuple<int, DateTime>)parameter;
+                                TravelDataObject travel = new TravelDataObject() { Id = travelId };
+
+                                var result = await DataServices.TravelerDataService.DeleteTravelAsync(travel, CancellationToken);
+                                if (result.Status == DAL.RequestStatus.Ok)
+                                {
+                                    GetData();
+                                    ShowAlert("", "Путешествие удалено", "OK");
+                                }
+                                else
+                                {
+                                    ShowAlert("", "Ошибка при удалении", "OK");
+                                }
                             }
                         }
                     });

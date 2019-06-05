@@ -29,6 +29,31 @@ namespace Traveler.BL.ViewModels.Planning
             set => Set(value);
         }
 
+        public ICommand DeleteEventCommand
+        {
+            get
+            {
+                return new Command(
+                    execute: async () =>
+                    {
+                        bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить событие?", "Да", "Нет");
+                        if(questionResult)
+                        {
+                            var queryResult = await DataServices.TravelerDataService.DeleteEventAsync(Event, CancellationToken);
+                            if(queryResult.Status == DAL.RequestStatus.Ok)
+                            {
+                                ShowAlert("", "Событие удалено", "OK");
+                                NavigateBack();
+                            }
+                            else
+                            {
+                                ShowAlert("", "Ошибка при удалении", "OK");
+                            }
+                        }
+                    });
+            }
+        }
+
         public ICommand SaveEventCommand
         {
             get
@@ -39,7 +64,7 @@ namespace Traveler.BL.ViewModels.Planning
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
                         await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        await NavigateBack();
+                        NavigateBack();
                     });
             }
         }
