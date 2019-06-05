@@ -116,8 +116,8 @@ namespace Traveler.UI.Controls.TravelerCalendar
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BorderColor = Color.Gray,
                 BackgroundColor = color,
-                Content = new Label() { Text = date.Day.ToString(), TextColor = Color.Black },
-                Padding = 1
+                Content = new Label() { Text = date.Day.ToString(), TextColor = Color.Black, Margin = 5 },
+                Padding = 10
             };
 
             frames.Add(frame);
@@ -170,8 +170,6 @@ namespace Traveler.UI.Controls.TravelerCalendar
             {
                 NewTravelStartDay = true;
                 NewTravelStartDate = frameDate;
-                //frame.BorderColor = Color.Yellow;
-                //frame.BackgroundColor = Color.Yellow;
             }
             else if (!NewTravelEndDay)
             {
