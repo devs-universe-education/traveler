@@ -33,6 +33,30 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
+        public ICommand NextMonth
+        {
+            get
+            {
+                return new Command(
+                    execute: () =>
+                    {
+                        Date = Date.AddMonths(1);
+                    });
+            }
+        }
+
+        public ICommand PreviousMonth
+        {
+            get
+            {
+                return new Command(
+                    execute: () =>
+                    {
+                        Date = Date.AddMonths(-1);
+                    });
+            }
+        }
+
         public ICommand GoToTravelNameCommand
         {
             get

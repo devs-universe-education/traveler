@@ -5,7 +5,7 @@
                 xmlns:controls="clr-namespace:Traveler.UI.Controls"
                 xmlns:calendarControl="clr-namespace:Traveler.UI.Controls.TravelerCalendar"
                 x:Class="Traveler.UI.Pages.Planning.CalendarPage"
-                Title="CalendarPage">
+                Title="Календарь путешествий">
     <ContentPage.Content>
         <controls:StateContainer State="{Binding State}">
             
@@ -15,9 +15,13 @@
 
             <controls:StateCondition State="Normal">
                 <StackLayout>
-                    <DatePicker Date="{Binding Date}" Format="MMMM, yyyy" />
+                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal" >
+                        <Button Text="&lt;" Command="{Binding PreviousMonth}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                        <DatePicker Date="{Binding Date}" Format="MMMM, yyyy" />
+                        <Button Text="&gt;" Command="{Binding NextMonth}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                    </StackLayout>
                     <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDates="{Binding NewTravelDates}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
-                    <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3" Visual="Material"/>
+                    <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
                 </StackLayout>
             </controls:StateCondition>
 
