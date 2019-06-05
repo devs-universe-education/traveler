@@ -24,7 +24,7 @@ namespace Traveler
         {
             var display = new TabPageInitializer() { Page = AppPages.Display, Title = "Главная", Icon = "home.png" };
             var calendar = new TabPageInitializer() { Page = AppPages.Calendar, Title = "Календарь", Icon = "calendar.png", IsNavigationPage = true };
-            var settings = new TabPageInitializer() { Page = AppPages.Settings, Title = "Настройки", Icon = "settings.png" };
+            var settings = new TabPageInitializer() { Page = AppPages.Settings, Title = "Настройки", Icon = "settings.png", IsNavigationPage = true };
 
             return new[] { display, calendar, settings };
         }

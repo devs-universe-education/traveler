@@ -16,9 +16,9 @@
             <controls:StateCondition State="Normal">
                 <StackLayout>
                     <StackLayout HorizontalOptions="Center" Orientation="Horizontal" >
-                        <Button Text="&lt;" Command="{Binding PreviousMonth}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                        <Button Text="&lt;" Command="{Binding PreviousMonthCommand}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
                         <DatePicker Date="{Binding Date}" Format="MMMM, yyyy" />
-                        <Button Text="&gt;" Command="{Binding NextMonth}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                        <Button Text="&gt;" Command="{Binding NextMonthCommand}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
                     </StackLayout>
                     <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDates="{Binding NewTravelDates}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
                     <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>

@@ -33,7 +33,7 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
-        public ICommand NextMonth
+        public ICommand NextMonthCommand
         {
             get
             {
@@ -45,7 +45,7 @@ namespace Traveler.BL.ViewModels.Planning
             }
         }
 
-        public ICommand PreviousMonth
+        public ICommand PreviousMonthCommand
         {
             get
             {
