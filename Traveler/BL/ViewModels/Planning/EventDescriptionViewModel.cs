@@ -42,9 +42,8 @@ namespace Traveler.BL.ViewModels.Planning
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
                         await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        if(NavigationParams.TryGetValue("parameter", out object value) && value is EventDataObject evnt)
-                        {
-                            if(evnt.Remind)
+
+                            if(Event.Remind)
                             {
                                 if (NavigationParams.TryGetValue("date", out object date) && date is DateTime evntDate)
                                 {
@@ -53,7 +52,7 @@ namespace Traveler.BL.ViewModels.Planning
                                     DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
                                 }
                             }                           
-                        }                       
+                                              
                         await NavigateBack();
                     });
             }
