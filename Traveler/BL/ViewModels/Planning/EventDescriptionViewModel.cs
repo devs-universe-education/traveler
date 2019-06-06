@@ -50,7 +50,6 @@ namespace Traveler.BL.ViewModels.Planning
                                 {
                                     dateTimeEvent = new DateTime(evntDate.Year, evntDate.Month, evntDate.Day, StartTime.Hours, StartTime.Minutes, 0);
                                     startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
-                                    //startTimeNotification = ((dateTimeEvent.ToUniversalTime().Ticks - 621355968000000000) / 10000000) - 1800000;
                                     DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
                                 }
                             }                           
