@@ -52,7 +52,7 @@ namespace Traveler.BL.ViewModels.Planning
                             }
                             NavigateBack();
                         }
-                        else
+                        else if (result.Status != DAL.RequestStatus.InvalidRequest)
                         {
                             ShowAlert("", "Ошибка при сохранении!", "OK");
                         }

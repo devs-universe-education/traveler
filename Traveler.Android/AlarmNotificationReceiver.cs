@@ -24,6 +24,9 @@ namespace Traveler.Android
             DateTime date = DateTime.Now;
             DateTime dateTimeStart = new DateTime(1, 1, 1, date.Hour, date.Minute, 0).AddMinutes(30);
 
+            if (DataServices.TravelerDataService == null)
+                DataServices.Init(false, new DatabaseConnectionAndroid().GetConnectionString());
+
             var result = await DataServices.TravelerDataService.GetEventTitleAsync(dateTimeStart);
 
             if(result.IsValid)

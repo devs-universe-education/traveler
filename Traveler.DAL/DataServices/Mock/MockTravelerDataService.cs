@@ -46,7 +46,7 @@ namespace Traveler.DAL.DataServices.Mock
 
         public Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx)
         {
-            return Task.FromResult(new RequestResult(RequestStatus.Ok));
+            return Task.FromResult(new RequestResult(RequestStatus.InvalidRequest));
         }
 
         public Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx)
