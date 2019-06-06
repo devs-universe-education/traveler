@@ -25,7 +25,7 @@ namespace Traveler.Android
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
             builder.SetAutoCancel(true)
                    .SetContentTitle("Напоминание")
-                   .SetContentText("До ближайшего события осталось 30 минут!")
+                   .SetContentText("Осталось 30 минут!")
                    .SetSmallIcon(Resource.Drawable.icon);
                       
                 notification = builder.Build();
