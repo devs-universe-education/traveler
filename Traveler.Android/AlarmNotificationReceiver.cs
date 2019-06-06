@@ -20,15 +20,7 @@ namespace Traveler.Android
     {
         static readonly int NOTIFICATION_ID = 101010;
         public override async void OnReceive(Context context, Intent intent)
-        {
-            var resultIntent = new Intent(context, typeof(MainActivity));
-
-            var stackBuilder = TaskStackBuilder.Create(context);
-            stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
-            stackBuilder.AddNextIntent(resultIntent);
-
-            var resultPendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);           
-
+        {                 
             DateTime date = DateTime.Now;
             DateTime dateTimeStart = new DateTime(1, 1, 1, date.Hour, date.Minute, 0).AddMinutes(30);
 
@@ -37,6 +29,14 @@ namespace Traveler.Android
             if(result.IsValid)
             {
                 var CHANNEL_ID = context.GetString(Resource.String.channel_id);
+
+                var resultIntent = new Intent(context, typeof(MainActivity));
+
+                var stackBuilder = TaskStackBuilder.Create(context);
+                stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
+                stackBuilder.AddNextIntent(resultIntent);
+
+                var resultPendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
                 builder.SetAutoCancel(true)
@@ -49,8 +49,7 @@ namespace Traveler.Android
 
                 var notificationManager = NotificationManagerCompat.From(context);
                 notificationManager.Notify(NOTIFICATION_ID, notification);
-            }
-           
+            }           
         }
     }
 }

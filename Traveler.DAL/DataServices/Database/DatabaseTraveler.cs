@@ -210,7 +210,12 @@ namespace Traveler.DAL.DataServices.Database
                 var eventObject = await database.Table<EventDataObject>().Where(x => x.StartTime == startTime).FirstOrDefaultAsync();
 
                 if (eventObject.Id != 0)
-                    return new RequestResult<string>(eventObject.Title, RequestStatus.Ok);
+                {
+                    if (eventObject.Remind)
+                        return new RequestResult<string>(eventObject.Title, RequestStatus.Ok);
+                    else
+                        return new RequestResult<string>(null, RequestStatus.DatabaseError);
+                }                    
                 else
                     return new RequestResult<string>(null, RequestStatus.DatabaseError);             
             }

@@ -21,7 +21,5 @@ namespace Traveler.DAL.DataServices
         Task<RequestResult<string>> GetEventTitleAsync(DateTime startTime);
         Task<RequestResult> SaveEventAsync(EventDataObject item, CancellationToken ctx);
         Task<RequestResult> DeleteEventAsync(EventDataObject item, CancellationToken ctx);
-
-
     }
 }
