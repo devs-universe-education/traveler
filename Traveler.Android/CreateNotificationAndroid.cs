@@ -35,7 +35,7 @@ namespace Traveler.Android
 
         public void CreateNotification(long startTime)
         {
-            alarmManager.Set(AlarmType.RtcWakeup, startTime + 3000, pendingIntent);
+            alarmManager.Set(AlarmType.RtcWakeup, startTime , pendingIntent);
         }
     }
 }

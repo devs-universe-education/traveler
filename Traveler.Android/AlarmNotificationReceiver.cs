@@ -36,7 +36,7 @@ namespace Traveler.Android
             builder.SetAutoCancel(true)
                    .SetContentIntent(resultPendingIntent)
                    .SetContentTitle("Напоминание")
-                   .SetContentText("До ближайшего события осталось 30 минут!")
+                   .SetContentText("Осталось 30 минут!")
                    .SetSmallIcon(Resource.Drawable.icon);
 
             notification = builder.Build();

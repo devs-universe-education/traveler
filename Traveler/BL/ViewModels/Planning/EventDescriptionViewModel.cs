@@ -33,27 +33,29 @@ namespace Traveler.BL.ViewModels.Planning
         {
             get
             {
-                DateTime dateTimeEvent;
-                long startTimeNotification;
-
                 return new Command(
                     execute: async () =>
                     {
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
-                        await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        //  DependencyService.Get<INotificationCreate>().CreateNotification();
-                        if (Event.Remind)
+                        var resualt = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
+                        if (resualt.Status == DAL.RequestStatus.Ok)
                         {
-                            if (NavigationParams.TryGetValue("date", out object date) && date is DateTime evntDate)
+                            if (Event.Remind)
                             {
-                                dateTimeEvent = new DateTime(evntDate.Year, evntDate.Month, evntDate.Day, StartTime.Hours, StartTime.Minutes, 0);
-                                startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
-                                DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
+                                if (NavigationParams.TryGetValue("date", out object date) && date is DateTime evntDate)
+                                {
+                                    DateTime dateTimeEvent = new DateTime(evntDate.Year, evntDate.Month, evntDate.Day, StartTime.Hours, StartTime.Minutes, 0);
+                                    long startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                                    DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
+                                }
                             }
+                            NavigateBack();
                         }
-
-                        await NavigateBack();
+                        else
+                        {
+                            ShowAlert("", "Ошибка при сохранении!", "OK");
+                        }
                     });
             }
         }

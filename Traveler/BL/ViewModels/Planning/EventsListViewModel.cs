@@ -43,7 +43,7 @@ namespace Traveler.BL.ViewModels.Planning
                 return new Command(
                     execute: (parameter) =>
                     {
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } });
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter }, { "date", eventParent.Date } });
                     });
             }
         }
