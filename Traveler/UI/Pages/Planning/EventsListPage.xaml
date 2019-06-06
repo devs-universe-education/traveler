@@ -33,7 +33,7 @@
                                         <Label Text="{Binding Remind}" VerticalTextAlignment="Center"/>
                                         <StackLayout Orientation="Vertical">
                                             <Label Text="{Binding Title}"/>
-                                            <Label Text="{Binding StartTime}"/>
+                                            <Label Text="{Binding StartTime,StringFormat='{}{0:HH:mm}'}"/>
                                         </StackLayout>
                                     </StackLayout>
                                 </ViewCell>
