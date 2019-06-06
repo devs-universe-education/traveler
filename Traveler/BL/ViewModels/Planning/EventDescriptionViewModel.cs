@@ -38,8 +38,8 @@ namespace Traveler.BL.ViewModels.Planning
                     {
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
-                        var resualt = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        if (resualt.Status == DAL.RequestStatus.Ok)
+                        var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
+                        if (result.Status == DAL.RequestStatus.Ok)
                         {
                             if (Event.Remind)
                             {

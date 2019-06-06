@@ -53,5 +53,10 @@ namespace Traveler.DAL.DataServices.Mock
         {
             throw new NotImplementedException();
         }
+
+        public Task<RequestResult<string>> GetEventTitleAsync(DateTime startTime)
+        {
+            return Task.FromResult(new RequestResult<string>(null, RequestStatus.DatabaseError));
+        }
     }
 }

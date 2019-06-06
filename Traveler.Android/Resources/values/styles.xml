@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<resources>
-
-  <string name="channel_name">Local Notifications</string>
-  <string name="channel_id">channelId</string>
-  
+<resources> 
   <style name="MainTheme" parent="MainTheme.Base">
   </style>
   <!-- Base theme applied no matter what API -->

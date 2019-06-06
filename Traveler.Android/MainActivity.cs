@@ -34,7 +34,7 @@ namespace Traveler.Android
                 return;
             }
 
-            var name = Resources.GetString(Resource.String.channel_name);
+            var name = GetString(Resource.String.channel_name);
             var id = GetString(Resource.String.channel_id);
             var channel = new NotificationChannel(id, name, NotificationImportance.Default);
 

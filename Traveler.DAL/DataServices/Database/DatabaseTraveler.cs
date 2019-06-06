@@ -201,6 +201,23 @@ namespace Traveler.DAL.DataServices.Database
             {
                 return new RequestResult(RequestStatus.DatabaseError);
             }
-        }        
+        }
+
+        public async Task<RequestResult<string>> GetEventTitleAsync(DateTime startTime)
+        {
+            try
+            {
+                var eventObject = await database.Table<EventDataObject>().Where(x => x.StartTime == startTime).FirstOrDefaultAsync();
+
+                if (eventObject.Id != 0)
+                    return new RequestResult<string>(eventObject.Title, RequestStatus.Ok);
+                else
+                    return new RequestResult<string>(null, RequestStatus.DatabaseError);             
+            }
+            catch (Exception)
+            {
+                return new RequestResult<string>(null, RequestStatus.DatabaseError);
+            }
+        }
     }
 }
