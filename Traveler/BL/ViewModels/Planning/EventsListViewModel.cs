@@ -60,7 +60,7 @@ namespace Traveler.BL.ViewModels.Planning
                             IdDay = eventParent.Id
                         };
 
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", newEvent } });
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", newEvent }, { "date", eventParent.Date } });
                     });
             }
         }        

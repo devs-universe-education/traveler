@@ -33,13 +33,27 @@ namespace Traveler.BL.ViewModels.Planning
         {
             get
             {
+                DateTime dateTimeEvent;
+                long startTimeNotification;
+
                 return new Command(
                     execute: async () =>
                     {
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
                         await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        DependencyService.Get<INotificationCreate>().CreateNotification(StartTime.Hours, StartTime.Minutes);
+                        if(NavigationParams.TryGetValue("parameter", out object value) && value is EventDataObject evnt)
+                        {
+                            if(evnt.Remind)
+                            {
+                                if (NavigationParams.TryGetValue("date", out object date) && date is DateTime evntDate)
+                                {
+                                    dateTimeEvent = new DateTime(evntDate.Year, evntDate.Month, evntDate.Day, StartTime.Hours, StartTime.Minutes, 0);                                    
+                                    startTimeNotification = ((dateTimeEvent.ToUniversalTime().Ticks - 621355968000000000) / 10000000) - 1800000;
+                                    DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
+                                }
+                            }                           
+                        }                       
                         await NavigateBack();
                     });
             }

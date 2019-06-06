@@ -20,14 +20,14 @@ namespace Traveler.Android
         static readonly string CHANNEL_ID = "channelId";
         public override void OnReceive(Context context, Intent intent)
         {
-           Notification notification;
+            Notification notification;
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+            builder.SetAutoCancel(true)
+                   .SetContentTitle("Напоминание")
+                   .SetContentText("До ближайшего события осталось 30 минут!")
+                   .SetSmallIcon(Resource.Drawable.icon);
                       
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                builder.SetAutoCancel(true)
-                       .SetContentTitle("Напоминание")
-                       .SetContentText("До ближайшего события осталось 30 минут!")
-                       .SetSmallIcon(Resource.Drawable.icon)
-                       .SetChannelId(CHANNEL_ID);
                 notification = builder.Build();
 
             var notificationManager = NotificationManagerCompat.From(context);
