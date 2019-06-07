@@ -43,8 +43,15 @@ namespace Traveler.BL.ViewModels.Planning
                             EndDate = NewTravelEndDate
                         };
 
-                        await DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
-                        NavigateBack();
+                        var result = await DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
+                        if (result.IsValid)
+                        {
+                            NavigateBack();
+                        }
+                        else
+                        {
+                            ShowAlert("", "Ошибка при добавлении путешествия", "OK");
+                        }
                     });
             }
         }

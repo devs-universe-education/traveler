@@ -63,6 +63,7 @@ namespace Traveler.BL.ViewModels.Planning
                     {
                         Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
                         Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
+
                         var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
                         if (result.Status == DAL.RequestStatus.Ok)
                         {
@@ -98,6 +99,7 @@ namespace Traveler.BL.ViewModels.Planning
                 Event = evnt;
                 StartTime = new TimeSpan(evnt.StartTime.Hour, evnt.StartTime.Minute, 0);
                 EndTime = new TimeSpan(evnt.EndTime.Hour, evnt.EndTime.Minute, 0);
+
                 State = PageState.Normal;
             }
             else

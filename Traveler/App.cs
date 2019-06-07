@@ -8,7 +8,7 @@ namespace Traveler
 {
 	public class App : Application
 	{
-		public App ()
+		public App()
 		{
 			DialogService.Init(this);
 			NavigationService.InitTabbed(InitializePages());

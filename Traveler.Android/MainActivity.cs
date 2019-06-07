@@ -24,6 +24,7 @@ namespace Traveler.Android
 
             CreateNotificationChannel();
         }
+
         void CreateNotificationChannel()
         {
             if (Build.VERSION.SdkInt < BuildVersionCodes.O)

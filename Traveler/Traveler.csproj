@@ -41,9 +41,6 @@
     <EmbeddedResource Update="UI\Pages\Planning\EventDescriptionPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\Planning\EventNamePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\Planning\EventsListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

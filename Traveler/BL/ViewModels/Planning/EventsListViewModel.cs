@@ -50,7 +50,11 @@ namespace Traveler.BL.ViewModels.Planning
                 return new Command(
                     execute: (parameter) =>
                     {
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter }, { "date", eventParent.Date } });
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
+                        {
+                            { "parameter", parameter },
+                            { "date", eventParent.Date }
+                        });
                     });
             }
         }
@@ -62,12 +66,13 @@ namespace Traveler.BL.ViewModels.Planning
                 return new Command(
                     execute: () =>
                     {
-                        EventDataObject newEvent = new EventDataObject()
-                        {
-                            IdDay = eventParent.Id
-                        };
+                        EventDataObject newEvent = new EventDataObject() { IdDay = eventParent.Id };
 
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>() { { "parameter", newEvent }, { "date", eventParent.Date } });
+                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
+                        {
+                            { "parameter", newEvent },
+                            { "date", eventParent.Date }
+                        });
                     });
             }
         }        
