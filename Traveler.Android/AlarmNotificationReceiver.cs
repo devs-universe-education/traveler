@@ -31,7 +31,7 @@ namespace Traveler.Android
                 return;
 
             DateTime date = DateTime.Now;
-            DateTime eventTime = new DateTime(1, 1, 1, date.Hour, date.Minute, 0).AddMinutes(30);
+            DateTime eventTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0).AddMinutes(30);
 
             if (DataServices.TravelerDataService == null)
                 DataServices.Init(false, new DatabaseConnectionAndroid().GetConnectionString());
