@@ -1,13 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Traveler.UI.Pages.Planning.CalendarPage"
-             Title="CalendarPage">
+<pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
+                xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:controls="clr-namespace:Traveler.UI.Controls"
+                xmlns:calendarControl="clr-namespace:Traveler.UI.Controls.TravelerCalendar"
+                x:Class="Traveler.UI.Pages.Planning.CalendarPage"
+                Title="Календарь путешествий">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Это календарь"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <controls:StateContainer State="{Binding State}">
+            
+            <controls:StateCondition State="Loading">
+                <ActivityIndicator IsRunning="True" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Normal">
+                <StackLayout>
+                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal" >
+                        <Button Text="&lt;" Command="{Binding PreviousMonthCommand}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                        <DatePicker Date="{Binding Date}" Format="MMMM, yyyy" />
+                        <Button Text="&gt;" Command="{Binding NextMonthCommand}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
+                    </StackLayout>
+                    <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDates="{Binding NewTravelDates}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
+                    <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+                </StackLayout>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Error">
+                <StackLayout>
+                    <Label Text="Ошибка загрузки данных" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+            </controls:StateCondition>
+            
+        </controls:StateContainer>        
     </ContentPage.Content>
-</ContentPage>
+</pages:BasePage>

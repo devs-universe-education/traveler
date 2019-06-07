@@ -1,4 +1,4 @@
-/* MIT License
+п»ї/* MIT License
 
 Copyright (c) 2018 Binwell https://binwell.com
 
@@ -21,7 +21,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,6 +29,9 @@ using Traveler.BL.ViewModels;
 using Traveler.Helpers;
 using Traveler.UI.Pages;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Application = Xamarin.Forms.Application;
+using TabbedPage = Xamarin.Forms.TabbedPage;
 
 namespace Traveler.UI
 {
@@ -37,13 +39,8 @@ namespace Traveler.UI
     {
         static readonly Lazy<NavigationService> LazyInstance = new Lazy<NavigationService>(() => new NavigationService(), true);
 
-        readonly ConcurrentStack<INavigation> _navigations = new ConcurrentStack<INavigation>();
         readonly Dictionary<string, Type> _pageTypes;
         readonly Dictionary<string, Type> _viewModelTypes;
-        Application _app;
-
-        // ignore all requests to avoid jittering while _isBusy == true
-        volatile bool _isBusy;
 
         NavigationService()
         {
@@ -52,350 +49,281 @@ namespace Traveler.UI
             MessagingCenter.Subscribe<MessageBus, NavigationPushInfo>(this, Consts.NavigationPushMessage, NavigationPushCallback);
             MessagingCenter.Subscribe<MessageBus, NavigationPopInfo>(this, Consts.NavigationPopMessage, NavigationPopCallback);
         }
+        public static void Init(AppPages detail)
+        {
+            Instance.Initialize(detail);
+        }
+
+        void Initialize(AppPages page)
+        {
+            var initPage = GetInitializedPage(page.ToString());
+            RootPush(initPage);
+        }
+
+        public static void InitTabbed(params TabPageInitializer[] pagesSet)
+        {
+            Instance.InitializeTabbed(pagesSet);
+        }
+
+        private void InitializeTabbed(TabPageInitializer[] pagesSet)
+        {
+            var tabbedPage = new TabbedPage();
+            tabbedPage.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+
+            foreach (var item in pagesSet)
+            {
+                if (item.IsNavigationPage)
+                {
+                    tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(item.Page.ToString())) { Title = item.Title, Icon = item.Icon });
+                }
+                else
+                {
+                    var page = GetInitializedPage(item.Page.ToString());
+                    page.Title = item.Title;
+                    page.Icon = item.Icon;
+
+                    tabbedPage.Children.Add(page);
+                }
+            }
+
+            Application.Current.MainPage = tabbedPage;
+        }
 
         public static NavigationService Instance => LazyInstance.Value;
 
-        public static void Init(Application app)
-        {
-            Instance.Initialize(app);
-        }
-
-        void Initialize(Application app)
-        {
-            _app = app;
-        }
-
-        // ДОДЕЛАТЬ
-        public void SetMainTabbedPage(object tabbedName = null, object childrenNames = null, Dictionary<string, object> navParams = null, bool invokeOnMainThread = false)
-        {
-            if (_isBusy) return;
-
-            //if(string.IsNullOrEmpty(tabbedName?.ToString())) throw new ArgumentNullException(nameof(tabbedName));
-            //if(string.IsNullOrEmpty(childrenNames?.ToString())) throw new ArgumentNullException(nameof(childrenNames));
-
-            Action setMainPage = () =>
-            {
-                _isBusy = true;
-
-                var tabbedPage = new TabbedPage();
-                // подтянуть из tabbedName и childrenNames
-                // + навигация
-                tabbedPage.Children.Add(new Pages.Main.DisplayPage());
-                tabbedPage.Children.Add(new Pages.Planning.CalendarPage());
-                tabbedPage.Children.Add(new Pages.Settings.SettingsPage());
-
-                _app.MainPage = tabbedPage;
-                //_navigations?.Clear();
-                //_navigations?.Push(masterDetailPage.Detail.Navigation);
-                _isBusy = false;
-            };
-
-            if (invokeOnMainThread)
-                Device.BeginInvokeOnMainThread(setMainPage);
-            else
-                setMainPage.Invoke();
-        }
-
-        public void SetMainMasterDetailPage(object masterName,
-            object detailName,
-            Dictionary<string, object> navParams = null,
-            bool invokeOnMainThread = false)
-        {
-            if (_isBusy) return;
-
-            if (string.IsNullOrEmpty(masterName?.ToString())) throw new ArgumentNullException(nameof(masterName));
-            if (string.IsNullOrEmpty(detailName?.ToString())) throw new ArgumentNullException(nameof(detailName));
-
-            Action setMainPage = () =>
-            {
-                _isBusy = true;
-
-                var masterDetailPage = new MasterDetailPage
-                {
-                    Master = GetInitializedPage(masterName.ToString(),
-                        withBackButton: false),
-                    Detail = GetInitializedPage(detailName.ToString(),
-                        NavigationMode.Normal,
-                        navParams, true, false,
-                        withBackButton: false)
-                };
-                _app.MainPage = masterDetailPage;
-                _navigations?.Clear();
-                _navigations?.Push(masterDetailPage.Detail.Navigation);
-                _isBusy = false;
-            };
-            if (invokeOnMainThread)
-                Device.BeginInvokeOnMainThread(setMainPage);
-            else setMainPage.Invoke();
-        }
-
-        public void SetMainPage(object page, Dictionary<string, object> navParams = null)
-        {
-            if (_isBusy) return;
-            if (string.IsNullOrEmpty(page?.ToString())) throw new ArgumentNullException(nameof(page));
-
-            _isBusy = true;
-            var navigationPage = new NavigationPage(GetInitializedPage(page.ToString(), withBackButton: false, navParams: navParams));
-            _app.MainPage = navigationPage;
-
-            DisposePages(_navigations.ToArray());
-
-            _navigations.Clear();
-            _navigations.Push(navigationPage.Navigation);
-            _isBusy = false;
-        }
-
         void NavigationPushCallback(MessageBus bus, NavigationPushInfo navigationPushInfo)
         {
-            if (_isBusy) return;
-
             if (navigationPushInfo == null) throw new ArgumentNullException(nameof(navigationPushInfo));
-
             if (string.IsNullOrEmpty(navigationPushInfo.To)) throw new FieldAccessException(@"'To' page value should be set");
-            if (_app == null) throw new FieldAccessException(@"App property not set. Use Init() before navigation");
-            if (_navigations.Count == 0) throw new FieldAccessException(@"Navigation is null. Add NavigationPage first");
 
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                _isBusy = true;
-
-                try
-                {
-                    await Push(navigationPushInfo);
-                }
-                catch (Exception e)
-                {
-                    //LogService.WriteError(this, nameof(NavigationPushCallback), e);
-                }
-
-                _isBusy = false;
-            });
+            Push(navigationPushInfo);
         }
 
         void NavigationPopCallback(MessageBus bus, NavigationPopInfo navigationPopInfo)
         {
             if (navigationPopInfo == null) throw new ArgumentNullException(nameof(navigationPopInfo));
-
-            if (!navigationPopInfo.Force && _isBusy) return;
-
-            if (_app == null) throw new FieldAccessException(@"Application property not set. Use Init() before navigation");
-            if (_navigations.Count == 0) throw new FieldAccessException(@"Navigation is null. Add NavigationPage first");
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                _isBusy = true;
-
-                try
-                {
-                    await Pop(navigationPopInfo);
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
-
-                _isBusy = false;
-            });
-        }
-
-        async Task SetRootDetailPage(MasterDetailPage masterDetailPage, Page newPage, bool withAnimation)
-        {
-            if (withAnimation)
-            {
-                newPage.Opacity = 0;
-                if (masterDetailPage.Detail != null)
-                    await masterDetailPage.Detail.FadeTo(0);
-            }
-
-            var oldNavigation = masterDetailPage.Detail?.Navigation;
-            masterDetailPage.Detail = newPage;
-            DisposePages(oldNavigation);
-
-            if (withAnimation)
-                await newPage.FadeTo(1);
-        }
-
-
-        Task HandleCustomPushNavigation(MasterDetailPage masterDetailPage, NavigationPushInfo pushInfo)
-        {
-            // TODO: Implement your own navigation stack manipulation using pushInfo
-            return Task.FromResult(0);
-        }
-
-        Task HandleCustomPopNavigation(NavigationPopInfo popInfo)
-        {
-            // TODO: Implement your own navigation stack manipulation using popInfo
-            return Task.FromResult(0);
-        }
-
-        void DisposePages(params INavigation[] navigations)
-        {
-            if (navigations != null && navigations.Length > 0)
-                foreach (var navigation in navigations)
-                {
-                    DisposePages(navigation.NavigationStack?.ToArray());
-                    DisposePages(navigation.ModalStack?.ToArray());
-                }
-        }
-
-        void DisposePages(params Page[] pages)
-        {
-            if (pages != null && pages.Length > 0)
-                foreach (var page in pages)
-                    if (page is IDisposable disposablePage)
-                        disposablePage.Dispose();
+            Pop(navigationPopInfo);
         }
 
         #region NavigationService internals
 
-        public async Task Push(NavigationPushInfo pushInfo)
+        INavigation GetTopNavigation()
+        {
+            var mainPage = Application.Current.MainPage;
+            if (mainPage is TabbedPage tabbed)
+            {
+                if (tabbed.CurrentPage is NavigationPage navigationPage)
+                {
+                    var modalStack = navigationPage.Navigation.ModalStack.OfType<NavigationPage>().ToList();
+                    if (modalStack.Any())
+                    {
+                        return modalStack.LastOrDefault()?.Navigation;
+                    }
+                    return navigationPage.Navigation;
+                }
+            }
+            if (mainPage is MasterDetailPage masterDetailPage)
+            {
+                if (masterDetailPage.Detail is NavigationPage navigationPage)
+                {
+                    var modalStack = navigationPage.Navigation.ModalStack.OfType<NavigationPage>().ToList();
+                    if (modalStack.Any())
+                    {
+                        return modalStack.LastOrDefault()?.Navigation;
+                    }
+                    return navigationPage.Navigation;
+                }
+            }
+            return (mainPage as NavigationPage)?.Navigation;
+        }
+
+        void Push(NavigationPushInfo pushInfo)
         {
             var newPage = GetInitializedPage(pushInfo);
-            INavigation navigation;
-
-            var masterDetailPage = _app.MainPage as MasterDetailPage;
-            if (masterDetailPage != null && masterDetailPage.IsPresented)
-            {
-                masterDetailPage.IsPresented = false;
-                await Task.Delay(300);
-            }
 
             switch (pushInfo.Mode)
             {
                 case NavigationMode.Normal:
-                    if (_navigations.TryPeek(out navigation))
-                        await navigation.PushAsync(newPage, pushInfo.WithAnimation);
+                    NormalPush(newPage, pushInfo.OnCompletedTask);
                     break;
-
                 case NavigationMode.Modal:
-                    if (_navigations.TryPeek(out navigation))
-                    {
-                        await navigation.PushModalAsync(newPage, pushInfo.WithAnimation);
-
-                        if (newPage.Navigation != null && !_navigations.Contains(newPage.Navigation))
-                            _navigations.Push(newPage.Navigation);
-                    }
+                    ModalPush(newPage, pushInfo.OnCompletedTask, pushInfo.NewNavigationStack);
                     break;
-
                 case NavigationMode.Root:
-                    if (masterDetailPage != null)
-                        await SetRootDetailPage(masterDetailPage, newPage, pushInfo.WithAnimation);
-                    else
-                        _app.MainPage = newPage;
-
-                    DisposePages(_navigations.ToArray());
-
-                    _navigations.Clear();
-                    _navigations.Push(newPage.Navigation);
+                    RootPush(newPage, pushInfo.OnCompletedTask);
                     break;
-
                 case NavigationMode.Custom:
-                    await HandleCustomPushNavigation(masterDetailPage, pushInfo);
+                    CustomPush(newPage, pushInfo.OnCompletedTask);
                     break;
-
                 default:
                     throw new NotImplementedException();
             }
         }
-
-        async Task Pop(NavigationPopInfo popInfo)
+        void NormalPush(Page newPage, TaskCompletionSource<bool> completed)
         {
-            INavigation navigation;
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await GetTopNavigation().PushAsync(newPage, true);
+                    completed.SetResult(true);
+                }
+                catch
+                {
+                    completed.SetResult(false);
+                }
+            });
+        }
+        void ModalPush(Page newPage, TaskCompletionSource<bool> completed, bool newNavigationStack = true)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    if (newNavigationStack) newPage = new NavigationPage(newPage);
+                    await GetTopNavigation().PushModalAsync(newPage, true);
+                    completed.SetResult(true);
+                }
+                catch
+                {
+                    completed.SetResult(false);
+                }
+            });
+        }
+
+        void RootPush(Page newPage, TaskCompletionSource<bool> pushInfoOnCompletedTask = null)
+        {
+            Device.BeginInvokeOnMainThread(async () => {
+                try
+                {
+                    if (Application.Current.MainPage == null)
+                    {
+                        var masterPage = GetInitializedPage(AppPages.Main.ToString());
+                        //Xamarin.Forms return exception when master page title is null
+                        //this title not visible in app
+                        masterPage.Title = nameof(masterPage);
+                        var detailPage = new NavigationPage(newPage);
+                        Application.Current.MainPage = new MasterDetailPage
+                        {
+                            Master = masterPage,
+                            Detail = detailPage
+                        };
+                    }
+                    else
+                    if (Application.Current.MainPage is MasterDetailPage mp)
+                    {
+                        mp.IsPresented = false;
+                        await Task.Delay(250);
+                        if (mp.Detail is NavigationPage navigationPage)
+                        {
+                            var navigation = navigationPage.Navigation;
+                            var navigationStack = navigationPage.Navigation.NavigationStack;
+                            if (navigationStack.Any())
+                            {
+                                navigation.InsertPageBefore(newPage, navigationStack.FirstOrDefault());
+                                await navigation.PopToRootAsync();
+                            }
+                        }
+
+                        pushInfoOnCompletedTask?.SetResult(true);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    pushInfoOnCompletedTask?.SetResult(false);
+                }
+            });
+
+        }
+        void CustomPush(Page newPage, TaskCompletionSource<bool> pushInfoOnCompletedTask)
+        {
+            // TODO: Implement your own navigation stack manipulation using popInfo
+        }
+        void Pop(NavigationPopInfo popInfo)
+        {
             switch (popInfo.Mode)
             {
                 case NavigationMode.Normal:
-                    if (_navigations.TryPeek(out navigation))
-                        await NormalPop(popInfo.WithAnimation, navigation);
+                    NormalPop(popInfo.OnCompletedTask);
                     break;
-
                 case NavigationMode.Modal:
-                    if (_navigations.TryPop(out navigation) && navigation.ModalStack.Count > 0)
-                        await ModalPop(popInfo.WithAnimation, navigation);
+                    ModalPop(popInfo.OnCompletedTask);
                     break;
-
-                case NavigationMode.Root:
-                    if (_navigations.TryPeek(out navigation))
-                    {
-                        var pagesToDispose = navigation.NavigationStack?.Count > 0
-                            ? navigation.NavigationStack.Where(p => p != navigation.NavigationStack[0]).ToArray()
-                            : null;
-                        await navigation.PopToRootAsync(popInfo.WithAnimation);
-                        DisposePages(pagesToDispose);
-                    }
-                    break;
-
                 case NavigationMode.Custom:
-                    await HandleCustomPopNavigation(popInfo);
+                    CustomPop(popInfo.OnCompletedTask);
                     break;
-
                 default:
                     throw new NotImplementedException();
             }
         }
-
-        async Task ModalPop(bool withAnimation, INavigation navigation)
+        void ModalPop(TaskCompletionSource<bool> completed)
         {
-            DisposePages(await navigation.PopModalAsync(withAnimation));
-        }
-
-        async Task NormalPop(bool withAnimation, INavigation navigation)
-        {
-            if (navigation.ModalStack.Count > 0 && navigation.NavigationStack.Count == 1)
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                if (_navigations.TryPop(out var tempNavigation) && tempNavigation.ModalStack.Count > 0)
-                    await ModalPop(withAnimation, tempNavigation);
-            }
-            else
-                DisposePages(await navigation.PopAsync(withAnimation));
+                try
+                {
+                    await GetTopNavigation().PopModalAsync();
+                    completed.SetResult(true);
+                }
+                catch
+                {
+                    completed.SetResult(false);
+                }
+            });
         }
-
+        void CustomPop(TaskCompletionSource<bool> completed)
+        {
+            // TODO: Implement your own navigation stack manipulation using popInfo
+        }
+        void NormalPop(TaskCompletionSource<bool> completed)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await GetTopNavigation().PopAsync();
+                    completed.SetResult(true);
+                }
+                catch
+                {
+                    completed.SetResult(false);
+                }
+            });
+        }
         static string GetTypeBaseName(MemberInfo info)
         {
             if (info == null) throw new ArgumentNullException(nameof(info));
             return info.Name.Replace(@"Page", "").Replace(@"ViewModel", "");
         }
-
         static Dictionary<string, Type> GetAssemblyPageTypes()
         {
             return typeof(BasePage).GetTypeInfo().Assembly.DefinedTypes
-                .Where(ti => ti.IsClass && !ti.IsAbstract && ti.Name.Contains(@"Page") && ti.BaseType.Name.Contains(nameof(BasePage)))
+                .Where(ti => ti.IsClass && !ti.IsAbstract && ti.Name.Contains(@"Page") && ti.BaseType.Name.Contains(@"Page"))
                 .ToDictionary(GetTypeBaseName, ti => ti.AsType());
         }
-
         static Dictionary<string, Type> GetAssemblyViewModelTypes()
         {
             return typeof(BaseViewModel).GetTypeInfo().Assembly.DefinedTypes
-                .Where(ti => ti.BaseType != null && (ti.IsClass && !ti.IsAbstract && ti.Name.Contains(@"ViewModel") &&
-                                                     ti.BaseType.Name.Contains(@"ViewModel")))
-                .ToDictionary(GetTypeBaseName, ti => ti.AsType());
+                                        .Where(ti => ti.IsClass && !ti.IsAbstract && ti.Name.Contains(@"ViewModel") &&
+                                                     ti.BaseType.Name.Contains(@"ViewModel"))
+                                        .ToDictionary(GetTypeBaseName, ti => ti.AsType());
         }
 
-        Page GetInitializedPage(string toName,
-            NavigationMode mode = NavigationMode.Normal,
-            Dictionary<string, object> navParams = null,
-            bool newNavigationStack = false,
-            bool withAnimation = true,
-            bool withBackButton = true,
-            string toTitle = null)
+
+        Page GetInitializedPage(string toName, Dictionary<string, object> navParams = null)
         {
             var page = GetPage(toName);
             var viewModel = GetViewModel(toName);
             viewModel.SetNavigationParams(navParams);
             page.SetViewModel(viewModel);
 
-            if (!string.IsNullOrEmpty(toTitle)) page.Title = toTitle;
-
-            return newNavigationStack
-                ? new NavigationPage(page)
-                : (Page)page;
+            return page;
         }
-
 
         Page GetInitializedPage(NavigationPushInfo navigationPushInfo)
         {
-            return GetInitializedPage(navigationPushInfo.To, navigationPushInfo.Mode, navigationPushInfo.NavigationParams,
-                navigationPushInfo.NewNavigationStack, navigationPushInfo.WithAnimation,
-                navigationPushInfo.WithBackButton, navigationPushInfo.ToTitle);
+            return GetInitializedPage(navigationPushInfo.To, navigationPushInfo.NavigationParams);
         }
 
         BasePage GetPage(string pageName)
@@ -439,18 +367,24 @@ namespace Traveler.UI
     {
         public string From { get; set; }
         public string To { get; set; }
-        public string ToTitle { get; set; }
         public Dictionary<string, object> NavigationParams { get; set; }
         public NavigationMode Mode { get; set; } = NavigationMode.Normal;
-        public bool WithAnimation { get; set; } = true;
-        public bool WithBackButton { get; set; } = true;
         public bool NewNavigationStack { get; set; }
+        public TaskCompletionSource<bool> OnCompletedTask { get; set; }
     }
 
     public class NavigationPopInfo
     {
         public NavigationMode Mode { get; set; } = NavigationMode.Normal;
-        public bool WithAnimation { get; set; } = true;
-        public bool Force { get; set; }
+        public TaskCompletionSource<bool> OnCompletedTask { get; set; }
+        public string To { get; set; }
+    }
+
+    public class TabPageInitializer
+    {
+        public AppPages Page { get; set; }
+        public string Title { get; set; }
+        public string Icon { get; set; }
+        public bool IsNavigationPage { get; set; }
     }
 }

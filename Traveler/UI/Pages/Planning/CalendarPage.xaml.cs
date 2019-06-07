@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace Traveler.UI.Pages.Planning
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class CalendarPage : ContentPage
+	public partial class CalendarPage : BasePage
 	{
 		public CalendarPage ()
 		{

@@ -1,12 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Traveler.UI.Pages.Planning.TravelNamePage">
+<pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
+                xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="Traveler.UI.Pages.Planning.TravelNamePage"
+                Title="Создание путешествия">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <DatePicker Date="{Binding NewTravelStartDate}" />
+            <DatePicker Date="{Binding NewTravelEndDate}" />
+            <Entry Placeholder="Название путешествия" Text="{Binding TravelTitle}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            
+            <Button Grid.Column="1" Grid.Row="0" Text="Сохранить" Command="{Binding CreateTravelCommand}"  TextColor="#2196F3" BackgroundColor="#00000000"/>
+            <Button Grid.Column="0" Grid.Row="0" Text="Отмена" Command="{Binding GoBackCommand}"  TextColor="#FF4081" BackgroundColor="#00000000"/>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</pages:BasePage>

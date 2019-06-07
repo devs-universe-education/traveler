@@ -1,12 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Traveler.UI.Pages.Planning.EventDescriptionPage">
+<pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
+                xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:controls="clr-namespace:Traveler.UI.Controls"
+                x:Class="Traveler.UI.Pages.Planning.EventDescriptionPage"
+                Title="Описание события">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="trashcan.png" Command="{Binding DeleteEventCommand}" />
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <controls:StateContainer State="{Binding State}">
+
+            <controls:StateCondition State="Loading">
+                <ActivityIndicator IsRunning="True" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Normal">
+                <ScrollView>
+                    <StackLayout>
+                        <Entry Text="{Binding Event.Title}" Placeholder="Название события"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Text="Дата начала:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Text="Дата окончания:"/>
+                            <TimePicker Time="{Binding StartTime}" Grid.Column="0" Grid.Row="1" Format="HH:mm" />
+                            <TimePicker Time="{Binding EndTime}" Grid.Column="1" Grid.Row="1" Format="HH:mm"/>
+                        </Grid>
+                        <Entry Text="{Binding Event.Address}" Placeholder="Адрес"/>
+                        <Entry Text="{Binding Event.Comment}" Placeholder="Комментарий"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Напомнить"/>
+                            <Switch IsToggled="{Binding Event.Remind}"/>
+                        </StackLayout>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1" Grid.Row="0" Text="Сохранить" Command="{Binding SaveEventCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+                            <Button Grid.Column="0" Grid.Row="0" Text="Отмена" Command="{Binding GoBackCommand}" BackgroundColor="#00FFFFFF" TextColor="#FF4081"/>
+                        </Grid>
+                    </StackLayout>
+                </ScrollView>
+            </controls:StateCondition>
+
+            <controls:StateCondition State="Error">
+                <StackLayout>
+                    <Label Text="Ошибка" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+            </controls:StateCondition>
+
+        </controls:StateContainer>
     </ContentPage.Content>
-</ContentPage>
+</pages:BasePage>

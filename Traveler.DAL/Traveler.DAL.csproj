@@ -1,15 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Mock\Main\day.json" />
+    <None Remove="Resources\Mock\Main\events.json" />
     <None Remove="Resources\Mock\Main\SampleDataObject.json" />
+    <None Remove="Resources\Mock\Main\travels.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Mock\Main\day.json" />
+    <EmbeddedResource Include="Resources\Mock\Main\events.json" />
     <EmbeddedResource Include="Resources\Mock\Main\SampleDataObject.json" />
+    <EmbeddedResource Include="Resources\Mock\Main\travels.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
   </ItemGroup>
 
 </Project>

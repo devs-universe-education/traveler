@@ -8,17 +8,26 @@ namespace Traveler
 {
 	public class App : Application
 	{
-		public App ()
+		public App()
 		{
 			DialogService.Init(this);
-			NavigationService.Init(this);
-			DataServices.Init(true);
+			NavigationService.InitTabbed(InitializePages());
+			DataServices.Init(true, DependencyService.Get<IDatabaseConnection>().GetConnectionString());
 		}
 
-		protected override void OnStart()
-		{
-            NavigationService.Instance.SetMainTabbedPage(AppPages.MainTab);
-		}
+        protected override void OnStart()
+        {
+
+        }
+
+        private TabPageInitializer[] InitializePages()
+        {
+            var display = new TabPageInitializer() { Page = AppPages.Display, Title = "Главная", Icon = "home.png" };
+            var calendar = new TabPageInitializer() { Page = AppPages.Calendar, Title = "Календарь", Icon = "calendar.png", IsNavigationPage = true };
+            var settings = new TabPageInitializer() { Page = AppPages.Settings, Title = "Настройки", Icon = "settings.png", IsNavigationPage = true };
+
+            return new[] { display, calendar, settings };
+        }
 	}
 }
 

@@ -1,0 +1,1 @@
+{"Values":[{"Id":1,"IdDay":1,"Title":"Событие 1","StartTime":"2019-05-10T17:00:00","EndTime":"2019-05-10T19:00:00","Address":"Адрес 1","Remind":true,"Comment":"Комментарий 1"},{"Id":2,"IdDay":1,"Title":"Событие 2","StartTime":"2019-05-10T19:25:00","EndTime":"2019-05-10T19:45:00","Address":"Адрес 2","Remind":false,"Comment":"Комментарий 2"}]}

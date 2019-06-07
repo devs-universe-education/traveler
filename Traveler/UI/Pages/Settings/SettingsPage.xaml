@@ -1,13 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<pages:BasePage xmlns:pages="clr-namespace:Traveler.UI.Pages;assembly=Traveler"
+                xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Traveler.UI.Pages.Settings.SettingsPage"
-             Title="SettingsPage">
+             Title="Настройки">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Это настройки"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+
+            <Label Text="{Binding ThemeItem}"/>
+            <Picker x:Name="picker" 
+            Title="Выбрать тему" 
+            ItemsSource="{Binding ThemeList}"
+            SelectedItem="{Binding ThemeItem}"/>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Разрешить push-уведомления" />
+                <Switch IsToggled="{Binding PushesEnabled}" />
+            </StackLayout>
+
+            <Button Text="О приложении" Command="{Binding ShowAboutCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</pages:BasePage>
