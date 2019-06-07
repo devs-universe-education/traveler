@@ -144,9 +144,19 @@ namespace Traveler.BL.ViewModels
             return GetCommand(propertyName) ?? SaveCommand(new Command(commandAction), propertyName);
         }
 
+        protected ICommand MakeCommand(Action commandAction, Func<bool> canExecute, [CallerMemberName] string propertyName = null)
+        {
+            return GetCommand(propertyName) ?? SaveCommand(new Command(commandAction, canExecute), propertyName);
+        }
+
         protected ICommand MakeCommand(Action<object> commandAction, [CallerMemberName] string propertyName = null)
         {
             return GetCommand(propertyName) ?? SaveCommand(new Command(commandAction), propertyName);
+        }
+
+        protected ICommand MakeCommand(Action<object> commandAction, Func<object, bool> canExecute, [CallerMemberName] string propertyName = null)
+        {
+            return GetCommand(propertyName) ?? SaveCommand(new Command(commandAction, canExecute), propertyName);
         }
 
         protected Task<bool> NavigateBack(NavigationMode mode = NavigationMode.Normal, bool withAnimation = true, bool force = false)

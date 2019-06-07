@@ -56,17 +56,21 @@ namespace Traveler.BL.ViewModels.Planning
                     });
             }
         }
+        
+        public ICommand CreateTravelCommand => MakeCommand(CreateTravelExecute, CreateTravelCanExecute, nameof(CreateTravelCommand));
 
-        public ICommand GoToTravelNameCommand
+        private void CreateTravelExecute(object obj)
         {
-            get
-            {
-                return new Command(
-                    execute: () =>
-                    {
-                        NavigateTo(AppPages.TravelName, null, dataToLoad: new Dictionary<string, object>() { { "Dates", NewTravelDates } });
-                    });
-            }
+            NavigateTo(AppPages.TravelName, null, dataToLoad: new Dictionary<string, object>() { { "Dates", obj } });
+        }
+
+        private bool CreateTravelCanExecute(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            var (startDate, endDate) = (ValueTuple<DateTime, DateTime>)obj;
+            return startDate != default(DateTime);
         }
 
         public ICommand GoToEventsListCommand
@@ -110,8 +114,8 @@ namespace Traveler.BL.ViewModels.Planning
 
         public override async Task OnPageAppearing()
         {
-            NewTravelDates = default((DateTime, DateTime));
-            GetData();
+            NewTravelDates = (default(DateTime), default(DateTime));
+            await GetData();
         }
 
         private async Task GetData()

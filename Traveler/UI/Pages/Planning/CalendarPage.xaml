@@ -21,7 +21,7 @@
                         <Button Text="&gt;" Command="{Binding NextMonthCommand}" WidthRequest="50" BackgroundColor="#00FFFFFF" FontSize="Large"/>
                     </StackLayout>
                     <calendarControl:TravelerCalendar Date="{Binding Date}" NewTravelDates="{Binding NewTravelDates}" Travels="{Binding Travels}" DayClicked="{Binding GoToEventsListCommand}" />
-                    <Button Text="+ Создать путешествие" Command="{Binding GoToTravelNameCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+                    <Button Text="+ Создать путешествие" Command="{Binding CreateTravelCommand}" CommandParameter="{Binding NewTravelDates}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
                 </StackLayout>
             </controls:StateCondition>
 
