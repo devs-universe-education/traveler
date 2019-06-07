@@ -215,9 +215,11 @@ namespace Traveler.DAL.DataServices.Database
                         return new RequestResult<string>(eventObject.Title, RequestStatus.Ok);
                     else
                         return new RequestResult<string>(null, RequestStatus.DatabaseError);
-                }                    
+                }
                 else
-                    return new RequestResult<string>(null, RequestStatus.DatabaseError);             
+                {
+                    return new RequestResult<string>(null, RequestStatus.DatabaseError);
+                }
             }
             catch (Exception)
             {

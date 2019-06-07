@@ -28,9 +28,9 @@ namespace Traveler.Android
             pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, myIntent, PendingIntentFlags.UpdateCurrent);
         }
 
-        public void CreateNotification(long startTime)
+        public void CreateNotification(long triggerAtMillis)
         {
-            alarmManager.Set(AlarmType.RtcWakeup, startTime , pendingIntent);
+            alarmManager.Set(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
         }
     }
 }

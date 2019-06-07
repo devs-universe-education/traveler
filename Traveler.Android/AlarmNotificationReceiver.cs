@@ -11,6 +11,7 @@ using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Traveler.DAL.DataServices;
+
 using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 
 namespace Traveler.Android
@@ -18,17 +19,17 @@ namespace Traveler.Android
     [BroadcastReceiver]
     class AlarmNotificationReceiver : BroadcastReceiver
     {
-        static readonly int NOTIFICATION_ID = 101010;
+        private static readonly int NOTIFICATION_ID = 101010;
+
         public override async void OnReceive(Context context, Intent intent)
         {                 
             DateTime date = DateTime.Now;
-            DateTime dateTimeStart = new DateTime(1, 1, 1, date.Hour, date.Minute, 0).AddMinutes(30);
+            DateTime eventTime = new DateTime(1, 1, 1, date.Hour, date.Minute, 0).AddMinutes(30);
 
             if (DataServices.TravelerDataService == null)
                 DataServices.Init(false, new DatabaseConnectionAndroid().GetConnectionString());
 
-            var result = await DataServices.TravelerDataService.GetEventTitleAsync(dateTimeStart);
-
+            var result = await DataServices.TravelerDataService.GetEventTitleAsync(eventTime);
             if(result.IsValid)
             {
                 var CHANNEL_ID = context.GetString(Resource.String.channel_id);
@@ -52,7 +53,7 @@ namespace Traveler.Android
 
                 var notificationManager = NotificationManagerCompat.From(context);
                 notificationManager.Notify(NOTIFICATION_ID, notification);
-            }           
+            }
         }
     }
 }

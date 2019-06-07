@@ -68,9 +68,9 @@ namespace Traveler.BL.ViewModels.Planning
                         {
                             if (Event.Remind)
                             {
-                                if (NavigationParams.TryGetValue("date", out object date) && date is DateTime evntDate)
+                                if (NavigationParams.TryGetValue("date", out object date) && date is DateTime eventDate)
                                 {
-                                    DateTime dateTimeEvent = new DateTime(evntDate.Year, evntDate.Month, evntDate.Day, StartTime.Hours, StartTime.Minutes, 0);
+                                    DateTime dateTimeEvent = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
                                     long startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
                                     DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
                                 }

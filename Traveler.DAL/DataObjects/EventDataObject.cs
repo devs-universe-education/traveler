@@ -12,7 +12,7 @@ namespace Traveler.DAL.DataObjects
         public int Id { get; set; }
         public int IdDay { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         //public EventType Type { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
