@@ -22,9 +22,9 @@ namespace Traveler
 
         private TabPageInitializer[] InitializePages()
         {
-            var display = new TabPageInitializer() { Page = AppPages.Display, Title = "Главная" };
-            var calendar = new TabPageInitializer() { Page = AppPages.Calendar, Title = "Календарь" };
-            var settings = new TabPageInitializer() { Page = AppPages.Settings, Title = "Настройки" };
+            var display = new TabPageInitializer() { Page = AppPages.Display, Title = "Главная", Icon = "home.png" };
+            var calendar = new TabPageInitializer() { Page = AppPages.Calendar, Title = "Календарь", Icon = "calendar.png", IsNavigationPage = true };
+            var settings = new TabPageInitializer() { Page = AppPages.Settings, Title = "Настройки", Icon = "settings.png", IsNavigationPage = true };
 
             return new[] { display, calendar, settings };
         }

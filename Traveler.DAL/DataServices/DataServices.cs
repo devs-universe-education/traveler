@@ -16,7 +16,6 @@ namespace Traveler.DAL.DataServices
             }
             else
             {
-
                 TravelerDataService = new Database.DatabaseTraveler(connectionString);               
             }
         }

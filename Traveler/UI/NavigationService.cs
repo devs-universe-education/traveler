@@ -42,7 +42,6 @@ namespace Traveler.UI
         readonly Dictionary<string, Type> _pageTypes;
         readonly Dictionary<string, Type> _viewModelTypes;
 
-
         NavigationService()
         {
             _pageTypes = GetAssemblyPageTypes();
@@ -71,26 +70,21 @@ namespace Traveler.UI
             var tabbedPage = new TabbedPage();
             tabbedPage.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
 
-            foreach(var item in pagesSet)
-                tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(item.Page.ToString())) { Title = item.Title, Icon = item.Icon });
+            foreach (var item in pagesSet)
+            {
+                if (item.IsNavigationPage)
+                {
+                    tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(item.Page.ToString())) { Title = item.Title, Icon = item.Icon });
+                }
+                else
+                {
+                    var page = GetInitializedPage(item.Page.ToString());
+                    page.Title = item.Title;
+                    page.Icon = item.Icon;
 
-            Application.Current.MainPage = tabbedPage;
-        }
-
-        [Obsolete("Перегрузка устарела")]
-        public static void InitTabbed(params AppPages[] childrenNames)
-        {
-            Instance.InitializeTabbed(childrenNames);
-        }
-
-        [Obsolete("Перегрузка устарела")]
-        void InitializeTabbed(params AppPages[] childrenNames)
-        {
-            var tabbedPage = new TabbedPage();
-            tabbedPage.On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Display.ToString())) { Title = "Home"  });
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Calendar.ToString())) {Title = "Calendar" });
-            tabbedPage.Children.Add(new NavigationPage(GetInitializedPage(AppPages.Settings.ToString())) { Title = "Settings" });
+                    tabbedPage.Children.Add(page);
+                }
+            }
 
             Application.Current.MainPage = tabbedPage;
         }
@@ -386,10 +380,11 @@ namespace Traveler.UI
         public string To { get; set; }
     }
 
-    public struct TabPageInitializer
+    public class TabPageInitializer
     {
         public AppPages Page { get; set; }
         public string Title { get; set; }
         public string Icon { get; set; }
+        public bool IsNavigationPage { get; set; }
     }
 }

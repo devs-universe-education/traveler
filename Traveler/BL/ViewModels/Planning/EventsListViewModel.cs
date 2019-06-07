@@ -30,9 +30,16 @@ namespace Traveler.BL.ViewModels.Planning
             get => Get<bool>();
             private set => Set(value);
         }
+
         public bool IsNotEmpty
         {
             get => Get<bool>();
+            private set => Set(value);
+        }
+
+        public string PageTitle
+        {
+            get => Get<string>();
             private set => Set(value);
         }
 
@@ -79,6 +86,9 @@ namespace Traveler.BL.ViewModels.Planning
             {
                 Events = eventResult.Data;
                 eventParent = dayResult.Data;
+
+                PageTitle = "Список событий " + eventParent.Date.ToString("dd/MM/yyyy");
+
                 State = PageState.Normal;
             }
             else
