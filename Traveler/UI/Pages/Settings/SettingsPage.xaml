@@ -12,6 +12,11 @@
             Title="Выбрать тему" 
             ItemsSource="{Binding ThemeList}"
             SelectedItem="{Binding ThemeItem}"/>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Разрешить push-уведомления" />
+                <Switch IsToggled="{Binding PushesEnabled}" />
+            </StackLayout>
             
         </StackLayout>
     </ContentPage.Content>

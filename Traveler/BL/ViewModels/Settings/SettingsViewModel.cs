@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Plugin.Settings;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Traveler.BL.ViewModels.Settings
 {
@@ -25,7 +27,22 @@ namespace Traveler.BL.ViewModels.Settings
                 "Светлая тема",
                 "Темная тема"
             };
-           
+        }
+
+        public bool PushesEnabled
+        {
+            get => Get<bool>();
+            set
+            {
+                Set(value);
+                CrossSettings.Current.AddOrUpdateValue(nameof(PushesEnabled), value);
+            }
+        }
+
+        public override Task OnPageAppearing()
+        {
+            PushesEnabled = CrossSettings.Current.GetValueOrDefault(nameof(PushesEnabled), true);
+            return base.OnPageAppearing();
         }
     }
 }

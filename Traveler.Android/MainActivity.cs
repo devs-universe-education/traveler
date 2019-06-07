@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using XamCal.Android;
+using Android.Runtime;
 
 namespace Traveler.Android
 {
@@ -17,7 +17,6 @@ namespace Traveler.Android
 
             base.OnCreate(bundle);
             UserDialogs.Init(this);
-            XamCalRenderer.Init();
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
@@ -25,7 +24,7 @@ namespace Traveler.Android
             CreateNotificationChannel();
         }
 
-        void CreateNotificationChannel()
+        private void CreateNotificationChannel()
         {
             if (Build.VERSION.SdkInt < BuildVersionCodes.O)
             {
