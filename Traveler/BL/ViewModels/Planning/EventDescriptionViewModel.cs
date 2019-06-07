@@ -61,27 +61,32 @@ namespace Traveler.BL.ViewModels.Planning
                 return new Command(
                     execute: async () =>
                     {
-                        Event.StartTime = new DateTime(1, 1, 1, StartTime.Hours, StartTime.Minutes, 0);
-                        Event.EndTime = new DateTime(1, 1, 1, EndTime.Hours, EndTime.Minutes, 0);
-
-                        var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                        if (result.Status == DAL.RequestStatus.Ok)
+                        if (NavigationParams.TryGetValue("date", out object date) && date is DateTime eventDate)
                         {
-                            if (Event.Remind)
+                            Event.StartTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
+                            Event.EndTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, EndTime.Hours, EndTime.Minutes, 0);
+
+                            var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
+                            if (result.Status == DAL.RequestStatus.Ok)
                             {
-                                if (NavigationParams.TryGetValue("date", out object date) && date is DateTime eventDate)
+                                if (Event.Remind)
                                 {
                                     DateTime dateTimeEvent = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
                                     long startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
                                     DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
                                 }
+                                NavigateBack();
                             }
-                            NavigateBack();
+                            else if (result.Status != DAL.RequestStatus.InvalidRequest)
+                            {
+                                ShowAlert("", "Ошибка при сохранении!", "OK");
+                            }
                         }
-                        else if (result.Status != DAL.RequestStatus.InvalidRequest)
+                        else
                         {
-                            ShowAlert("", "Ошибка при сохранении!", "OK");
+                            ShowAlert("", "Сбой при передаче данных!", "OK");
                         }
+
                     });
             }
         }

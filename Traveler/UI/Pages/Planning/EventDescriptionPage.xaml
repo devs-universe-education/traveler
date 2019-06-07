@@ -29,8 +29,8 @@
                                 <ColumnDefinition></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0" Text="Дата начала:"/>
-                            <Label Grid.Column="1" Grid.Row="0" Text="Дата окончания:"/>
+                            <Label Grid.Column="0" Grid.Row="0" Text="Время начала:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Text="Время окончания:"/>
                             <TimePicker Time="{Binding StartTime}" Grid.Column="0" Grid.Row="1" Format="HH:mm" />
                             <TimePicker Time="{Binding EndTime}" Grid.Column="1" Grid.Row="1" Format="HH:mm"/>
                         </Grid>
