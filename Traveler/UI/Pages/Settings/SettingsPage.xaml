@@ -17,7 +17,9 @@
                 <Label Text="Разрешить push-уведомления" />
                 <Switch IsToggled="{Binding PushesEnabled}" />
             </StackLayout>
-            
+
+            <Button Text="О приложении" Command="{Binding ShowAboutCommand}" BackgroundColor="#00FFFFFF" TextColor="#2196F3"/>
+
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>
