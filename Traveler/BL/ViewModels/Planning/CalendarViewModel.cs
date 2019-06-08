@@ -33,30 +33,20 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
-        public ICommand NextMonthCommand
+        public ICommand NextMonthCommand => MakeCommand(NextMonthExecute, nameof(NextMonthCommand));
+
+        private void NextMonthExecute()
         {
-            get
-            {
-                return new Command(
-                    execute: () =>
-                    {
-                        Date = Date.AddMonths(1);
-                    });
-            }
+            Date = Date.AddMonths(1);
         }
 
-        public ICommand PreviousMonthCommand
+        public ICommand PreviousMonthCommand => MakeCommand(PreviousMonthExecute, nameof(PreviousMonthCommand));
+
+        private void PreviousMonthExecute()
         {
-            get
-            {
-                return new Command(
-                    execute: () =>
-                    {
-                        Date = Date.AddMonths(-1);
-                    });
-            }
+            Date = Date.AddMonths(-1);
         }
-        
+
         public ICommand CreateTravelCommand => MakeCommand(CreateTravelExecute, CreateTravelCanExecute, nameof(CreateTravelCommand));
 
         private void CreateTravelExecute(object obj)
@@ -73,42 +63,37 @@ namespace Traveler.BL.ViewModels.Planning
             return startDate != default(DateTime);
         }
 
-        public ICommand GoToEventsListCommand
+        public ICommand GoToEventsListCommand => MakeCommand(GoToEventsListExecute, nameof(GoToEventsListCommand));
+
+        private async void GoToEventsListExecute(object obj)
         {
-            get
+            string toEventsList = "Перейти к событиям";
+            string deleteTravel = "Удалить путешествие";
+            string selectedItem = await ShowSheet("Выберите действие", "Отмена", "", new[] { toEventsList, deleteTravel });
+
+            if (selectedItem == toEventsList)
             {
-                return new Command(
-                    execute: async (parameter) =>
+                NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "parameter", obj } });
+            }
+            else if (selectedItem == deleteTravel)
+            {
+                bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить путешествие?", "Да", "Нет");
+                if (questionResult)
+                {
+                    var (travelId, day) = (ValueTuple<int, DateTime>)obj;
+                    TravelDataObject travel = new TravelDataObject() { Id = travelId };
+
+                    var result = await DataServices.TravelerDataService.DeleteTravelAsync(travel, CancellationToken);
+                    if (result.Status == DAL.RequestStatus.Ok)
                     {
-                        string toEventsList = "Перейти к событиям";
-                        string deleteTravel = "Удалить путешествие";
-                        string selectedItem = await ShowSheet("Выберите действие", "Отмена", "", new[] { toEventsList, deleteTravel });
-
-                        if (selectedItem == toEventsList)
-                        {
-                            NavigateTo(AppPages.EventsList, null, dataToLoad: new Dictionary<string, object>() { { "parameter", parameter } });
-                        }
-                        else if(selectedItem == deleteTravel)
-                        {
-                            bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить путешествие?", "Да", "Нет");
-                            if (questionResult)
-                            {
-                                var (travelId, day) = (ValueTuple<int, DateTime>)parameter;
-                                TravelDataObject travel = new TravelDataObject() { Id = travelId };
-
-                                var result = await DataServices.TravelerDataService.DeleteTravelAsync(travel, CancellationToken);
-                                if (result.Status == DAL.RequestStatus.Ok)
-                                {
-                                    GetData();
-                                    ShowAlert("", "Путешествие удалено", "OK");
-                                }
-                                else
-                                {
-                                    ShowAlert("", "Ошибка при удалении", "OK");
-                                }
-                            }
-                        }
-                    });
+                        GetData();
+                        ShowAlert("", "Путешествие удалено", "OK");
+                    }
+                    else
+                    {
+                        ShowAlert("", "Ошибка при удалении", "OK");
+                    }
+                }
             }
         }
 
