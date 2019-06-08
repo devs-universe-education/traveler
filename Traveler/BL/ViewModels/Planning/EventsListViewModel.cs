@@ -43,39 +43,29 @@ namespace Traveler.BL.ViewModels.Planning
             private set => Set(value);
         }
 
-        public ICommand GoToEventDescriptionCommand
+        public ICommand GoToEventDescriptionCommand => MakeCommand(GoToEventDescriptionExecute, nameof(GoToEventDescriptionCommand));
+
+        private void GoToEventDescriptionExecute(object obj)
         {
-            get
+            NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
             {
-                return new Command(
-                    execute: (parameter) =>
-                    {
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
-                        {
-                            { "parameter", parameter },
-                            { "date", eventParent.Date }
-                        });
-                    });
-            }
+                { "parameter", obj },
+                { "date", eventParent.Date }
+            });
         }
 
-        public ICommand GoToNewEventDescriptionCommand
-        {
-            get
-            {
-                return new Command(
-                    execute: () =>
-                    {
-                        EventDataObject newEvent = new EventDataObject() { IdDay = eventParent.Id };
+        public ICommand GoToNewEventDescriptionCommand => MakeCommand(GoToNewEventDescriptionExecute, nameof(GoToNewEventDescriptionCommand));
 
-                        NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
-                        {
-                            { "parameter", newEvent },
-                            { "date", eventParent.Date }
-                        });
-                    });
-            }
-        }        
+        private void GoToNewEventDescriptionExecute()
+        {
+            EventDataObject newEvent = new EventDataObject() { IdDay = eventParent.Id };
+
+            NavigateTo(AppPages.EventDescription, null, dataToLoad: new Dictionary<string, object>()
+            {
+                { "parameter", newEvent },
+                { "date", eventParent.Date }
+            });
+        }
 
         public override async Task OnPageAppearing()
         {
