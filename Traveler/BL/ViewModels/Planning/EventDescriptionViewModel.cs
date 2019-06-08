@@ -29,65 +29,55 @@ namespace Traveler.BL.ViewModels.Planning
             set => Set(value);
         }
 
-        public ICommand DeleteEventCommand
+        public ICommand DeleteEventCommand => MakeCommand(DeleteEventExecute, nameof(DeleteEventCommand));
+
+        private async void DeleteEventExecute()
         {
-            get
+            bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить событие?", "Да", "Нет");
+            if (questionResult)
             {
-                return new Command(
-                    execute: async () =>
-                    {
-                        bool questionResult = await ShowQuestion("Подтверждение действия", "Удалить событие?", "Да", "Нет");
-                        if(questionResult)
-                        {
-                            var queryResult = await DataServices.TravelerDataService.DeleteEventAsync(Event, CancellationToken);
-                            if(queryResult.Status == DAL.RequestStatus.Ok)
-                            {
-                                ShowAlert("", "Событие удалено", "OK");
-                                NavigateBack();
-                            }
-                            else
-                            {
-                                ShowAlert("", "Ошибка при удалении", "OK");
-                            }
-                        }
-                    });
+                var queryResult = await DataServices.TravelerDataService.DeleteEventAsync(Event, CancellationToken);
+                if (queryResult.Status == DAL.RequestStatus.Ok)
+                {
+                    ShowAlert("", "Событие удалено", "OK");
+                    NavigateBack();
+                }
+                else
+                {
+                    ShowAlert("", "Ошибка при удалении", "OK");
+                }
             }
         }
 
-        public ICommand SaveEventCommand
+        public ICommand SaveEventCommand => MakeCommand(SaveEventExecute, nameof(SaveEventCommand));
+
+        private async void SaveEventExecute()
         {
-            get
+            if (NavigationParams.TryGetValue("date", out object date) && date is DateTime eventDate)
             {
-                return new Command(
-                    execute: async () =>
+                Event.StartTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
+                Event.EndTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, EndTime.Hours, EndTime.Minutes, 0);
+
+                var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
+                if (result.Status == DAL.RequestStatus.Ok)
+                {
+                    if (Event.Remind)
                     {
-                        if (NavigationParams.TryGetValue("date", out object date) && date is DateTime eventDate)
-                        {
-                            Event.StartTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
-                            Event.EndTime = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, EndTime.Hours, EndTime.Minutes, 0);
+                        DateTime dateTimeEvent = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
+                        long startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                        DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
+                    }
 
-                            var result = await DataServices.TravelerDataService.SaveEventAsync(Event, CancellationToken);
-                            if (result.Status == DAL.RequestStatus.Ok)
-                            {
-                                if (Event.Remind)
-                                {
-                                    DateTime dateTimeEvent = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, StartTime.Hours, StartTime.Minutes, 0);
-                                    long startTimeNotification = (long)dateTimeEvent.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 30, 0, DateTimeKind.Utc)).TotalMilliseconds;
-                                    DependencyService.Get<INotificationCreate>().CreateNotification(startTimeNotification);
-                                }
-                                NavigateBack();
-                            }
-                            else if (result.Status != DAL.RequestStatus.InvalidRequest)
-                            {
-                                ShowAlert("", "Ошибка при сохранении!", "OK");
-                            }
-                        }
-                        else
-                        {
-                            ShowAlert("", "Сбой при передаче данных!", "OK");
-                        }
-
-                    });
+                    NavigateBack();
+                }
+                else if (result.Status != DAL.RequestStatus.InvalidRequest)
+                {
+                    ShowAlert("", "Ошибка при сохранении!", "OK");
+                }
+            }
+            else
+            {
+                ShowAlert("", "Сбой при передаче данных", "OK");
             }
         }
 
