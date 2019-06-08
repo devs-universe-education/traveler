@@ -29,30 +29,25 @@ namespace Traveler.BL.ViewModels.Planning
             set => Set(value);
         }
 
-        public ICommand CreateTravelCommand
-        {
-            get
-            {
-                return new Command(
-                    execute: async () =>
-                    {
-                        TravelDataObject travel = new TravelDataObject()
-                        {
-                            Title = TravelTitle,
-                            StartDate = NewTravelStartDate,
-                            EndDate = NewTravelEndDate
-                        };
+        public ICommand CreateTravelCommand => MakeCommand(CreateTravelExecute, nameof(CreateTravelCommand));
 
-                        var result = await DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
-                        if (result.IsValid)
-                        {
-                            NavigateBack();
-                        }
-                        else
-                        {
-                            ShowAlert("", "Ошибка при добавлении путешествия", "OK");
-                        }
-                    });
+        private async void CreateTravelExecute()
+        {
+            TravelDataObject travel = new TravelDataObject()
+            {
+                Title = TravelTitle,
+                StartDate = NewTravelStartDate,
+                EndDate = NewTravelEndDate
+            };
+
+            var result = await DataServices.TravelerDataService.SaveTravelAsync(travel, CancellationToken);
+            if (result.IsValid)
+            {
+                NavigateBack();
+            }
+            else
+            {
+                ShowAlert("", "Ошибка при добавлении путешествия", "OK");
             }
         }
 
